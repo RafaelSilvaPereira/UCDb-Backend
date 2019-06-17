@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class UcdbApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(UcdbApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(UcdbApplication.class, args);
+    }
 
 }
