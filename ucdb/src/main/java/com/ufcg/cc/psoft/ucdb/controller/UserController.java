@@ -29,6 +29,6 @@ public class UserController {
     @GetMapping(value = "/private")/* essa utl privada poderia ser qualquer outra "/carambolas" */
     @ResponseBody
     public ResponseEntity<String> teste1() {
-        return new ResponseEntity<>("exemplo do como funciona um metodo privado", HttpStatus.OK);
+        return new ResponseEntity<>("Assim funciona um metodo privado.", HttpStatus.OK);
     }
 }
