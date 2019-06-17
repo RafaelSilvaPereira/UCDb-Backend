@@ -1,9 +1,12 @@
 package com.ufcg.cc.psoft.ucdb.model;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Entity
@@ -11,14 +14,20 @@ public class User {
 
     @Id
     private String email;
+
+
     private String firstName;
+
+
     private String secondName;
+
+
     private String password;
 
     public User() {
     }
 
-    public User(String email, String firstName, String secondName, String password) {
+    public User( String email,  String firstName,  String secondName,  String password) {
         this.email = email;
         this.firstName = firstName;
         this.secondName = secondName;
@@ -58,4 +67,13 @@ public class User {
         this.password = password;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "email='" + email + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", secondName='" + secondName + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }
