@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Repository
-public interface SubjectDAO<T,ID extends Serializable> extends JpaRepository<Subject, String> {
+public interface SubjectDAO<T,ID extends Serializable> extends JpaRepository<Subject, Long> {
     List<Subject> findAll();
 
     Subject save(Subject subject);

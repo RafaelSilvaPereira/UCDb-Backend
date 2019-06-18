@@ -10,7 +10,7 @@ import javax.persistence.Id;
 public class Subject {
 
     @Id
-    private String id;
+    private long id;
 
     private String name;
 
@@ -20,7 +20,7 @@ public class Subject {
 
     public Subject() {}
 
-    public Subject(String id, String name){
+    public Subject(long id, String name){
         this.id = id;
         this.name = name;
         //this.likes = new ??
@@ -28,7 +28,7 @@ public class Subject {
         //this.comments = new ??
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
