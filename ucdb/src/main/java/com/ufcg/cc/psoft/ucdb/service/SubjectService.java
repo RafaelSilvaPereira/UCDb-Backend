@@ -5,6 +5,7 @@ import com.ufcg.cc.psoft.ucdb.model.Subject;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SubjectService {
@@ -21,7 +22,7 @@ public class SubjectService {
 
     public List findAll() { return subjectDAO.findAll(); }
 
-    public List findBySubstring(String substring) { return subjectDAO.findBySubstring(substring); }
+    public List<Subject> findBySubstring(String substring) { return subjectDAO.findBySubstring(substring); }
 
     public void deleteAll() { subjectDAO.deleteAll();}
 

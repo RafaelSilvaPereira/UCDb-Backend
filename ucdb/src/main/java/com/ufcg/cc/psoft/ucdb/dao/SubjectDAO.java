@@ -18,8 +18,8 @@ public interface SubjectDAO<T,ID extends Serializable> extends JpaRepository<Sub
 
     Subject findById(long id);
 
-    @Query(value = "SELECT s FROM Subject s WHERE s.name LIKE '%substring%'")
-    List findBySubstring(@Param("substring") String substring);
+    @Query(value = "SELECT s FROM Subject s WHERE s.name LIKE concat('%',:substring,'%')")
+    List<Subject> findBySubstring(@Param("substring") String substring);
 
 
     // ...

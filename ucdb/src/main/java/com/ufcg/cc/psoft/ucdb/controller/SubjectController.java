@@ -35,7 +35,7 @@ public class SubjectController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/id/{id}")
     @ResponseBody
     public ResponseEntity<Subject> findById(@PathVariable long id) {
         Subject subject = subjectService.findById(id);
@@ -50,17 +50,17 @@ public class SubjectController {
         return new ResponseEntity<List>(subjects,HttpStatus.OK);
     }
 
-//    @GetMapping(value = "/search={substring}")
-//    public ResponseEntity<List> findBySubstring(@PathVariable String substring){
+    @GetMapping(value = "/search/{substring}")
+    public ResponseEntity<List> findBySubstring(@PathVariable String substring){
+        List<Subject> subjects = subjectService.findBySubstring(substring);
+
+        return new ResponseEntity<List>(subjects,HttpStatus.OK);
+    }
+
+//    @GetMapping("/search")
+//    public ResponseEntity<List> findBySubstring(@RequestParam(name = "substring", required = true) String substring) {
 //        List subjects = subjectService.findBySubstring(substring);
 //
 //        return new ResponseEntity<List>(subjects,HttpStatus.OK);
 //    }
-
-    @GetMapping("/search")
-    public ResponseEntity<List> findBySubstring(@RequestParam(name = "substring", required = true) String substring) {
-        List subjects = subjectService.findBySubstring(substring);
-
-        return new ResponseEntity<List>(subjects,HttpStatus.OK);
-    }
 }
