@@ -7,10 +7,9 @@ import com.ufcg.cc.psoft.ucdb.service.UserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
@@ -38,7 +37,8 @@ public class LoginController {
      *  (null, or invalid string).
      */
     @PostMapping("/")
-    public LoginResponse authenticate(@RequestBody User requestUser) throws NotCorrespondingUserLogin,
+    @ResponseBody
+    public ResponseEntity<LoginResponse> authenticate(@RequestBody User requestUser) throws NotCorrespondingUserLogin,
             InvalidLoginException {
         String email = requestUser.getEmail();
         String password= requestUser.getPassword();
@@ -55,7 +55,8 @@ public class LoginController {
         String currentDate = new Date().toString(); /* use current data for generate unique tokens */
         String userToken = getToken(registeredUser.toString() + currentDate);
 
-        return new LoginResponse(userToken);
+        ResponseEntity<LoginResponse> loginResponseResponseEntity = new ResponseEntity<LoginResponse>(new LoginResponse(userToken), HttpStatus.OK);
+        return loginResponseResponseEntity;
     }
 
     /**
