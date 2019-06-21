@@ -14,6 +14,8 @@ public class SubjectService {
 
     public SubjectService(SubjectDAO subjectDAO) {this.subjectDAO = subjectDAO; }
 
+
+
     public Subject create(Subject subject) { return subjectDAO.save(subject);}
 
     public void delete(long id) { subjectDAO.delete(id);}
@@ -23,6 +25,10 @@ public class SubjectService {
     public List findAll() { return subjectDAO.findAll(); }
 
     public List<Subject> findBySubstring(String substring) { return subjectDAO.findBySubstring(substring); }
+
+    public void saveAllSubjects(List<Subject> subjects) {
+        this.subjectDAO.saveAll(subjects);
+    }
 
     public void deleteAll() { subjectDAO.deleteAll();}
 

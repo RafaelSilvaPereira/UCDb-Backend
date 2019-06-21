@@ -2,10 +2,17 @@ package com.ufcg.cc.psoft.ucdb.controller;
 
 import com.ufcg.cc.psoft.ucdb.model.Subject;
 import com.ufcg.cc.psoft.ucdb.service.SubjectService;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -57,6 +64,20 @@ public class SubjectController {
         return new ResponseEntity<List>(subjects,HttpStatus.OK);
     }
 
+
+    @GetMapping(value = "/create/allsubjects")
+    public void saveAllSubjects() throws IOException, ParseException {
+        JSONArray jsonArray;
+        JSONParser jsonParser = new JSONParser();
+        FileReader archive = new FileReader("src/main/java/com/ufcg/cc/psoft/util/disciplina.json");
+        jsonArray = (JSONArray) jsonParser.parse(archive);
+        jsonArray.stream().forEach(object -> {
+            JSONObject jsonobjectvalue = (JSONObject) object;
+            String name = (String) jsonobjectvalue.get("nome");
+            this.createSubject(new Subject(name));
+        });
+
+    }
 //    @GetMapping("/search")
 //    public ResponseEntity<List> findBySubstring(@RequestParam(name = "substring", required = true) String substring) {
 //        List subjects = subjectService.findBySubstring(substring);

@@ -16,7 +16,7 @@ import java.util.Map;
 public class Subject {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     private String name;
@@ -30,6 +30,10 @@ public class Subject {
 //    private List<Comment> comments;
 
     public Subject() {}
+
+    public Subject(String name) {
+        this.name = name;
+    }
 
     public Subject(long id, String name){
         this.id = id;

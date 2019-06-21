@@ -1,6 +1,7 @@
 package com.ufcg.cc.psoft.ucdb;
 
-import com.ufcg.cc.psoft.ucdb.controller.TokenFilter;
+
+import com.ufcg.cc.psoft.ucdb.accessFilter.TokenFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -17,14 +18,6 @@ public class UcdbApplication {
     }
 
     @Bean
-    public FilterRegistrationBean filterJwt() {
-        FilterRegistrationBean filterR = new FilterRegistrationBean();
-        filterR.setFilter(new TokenFilter());
-        filterR.addUrlPatterns("/v1/users/private");
-        return filterR;
-    }
-
-    @Bean
     public FilterRegistrationBean corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration().applyPermitDefaultValues();
@@ -34,4 +27,7 @@ public class UcdbApplication {
         bean.setOrder(0);
         return bean;
     }
+
+
+
 }

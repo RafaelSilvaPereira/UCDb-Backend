@@ -1,4 +1,4 @@
-package com.ufcg.cc.psoft.ucdb.controller;
+package com.ufcg.cc.psoft.ucdb.accessFilter;
 import io.jsonwebtoken.Jwts;
 import org.springframework.web.filter.GenericFilterBean;
 
