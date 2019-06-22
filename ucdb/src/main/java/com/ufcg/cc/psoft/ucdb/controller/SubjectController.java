@@ -54,14 +54,14 @@ public class SubjectController {
     public ResponseEntity<List> findAll() {
         List subjects = subjectService.findAll();
 
-        return new ResponseEntity<List>(subjects,HttpStatus.OK);
+        return new ResponseEntity<List>(subjects, HttpStatus.OK);
     }
 
     @GetMapping(value = "/search/{substring}")
     public ResponseEntity<List> findBySubstring(@PathVariable String substring){
         List<Subject> subjects = subjectService.findBySubstring(substring);
 
-        return new ResponseEntity<List>(subjects,HttpStatus.OK);
+        return new ResponseEntity<List>(subjects, HttpStatus.OK);
     }
 
 
