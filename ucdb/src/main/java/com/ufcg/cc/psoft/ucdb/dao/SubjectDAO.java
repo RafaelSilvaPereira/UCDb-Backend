@@ -24,5 +24,8 @@ public interface SubjectDAO<T,ID extends Serializable> extends JpaRepository<Sub
     @Override
     <S extends Subject> List<S> saveAll(Iterable<S> iterable);
 
+
+
+
     // ...
 }

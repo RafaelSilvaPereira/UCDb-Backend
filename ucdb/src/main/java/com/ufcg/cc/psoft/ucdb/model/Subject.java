@@ -2,17 +2,12 @@ package com.ufcg.cc.psoft.ucdb.model;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.persistence.*;
+import java.util.*;
 
 @Data
-@Entity
+@Entity(name = "Subject")
+@Table(name = "subject")
 public class Subject {
 
     @Id
@@ -21,27 +16,53 @@ public class Subject {
 
     private String name;
 
-//    private List<String> likes;
-//
-//    private List<String> dislikes;
-//
-//    private Map<String, Float> rate;
-//
-//    private List<Comment> comments;
+    @ManyToMany(mappedBy = "enjoiyed")
+    private Set<User> userLiked;
 
-    public Subject() {}
+    @ManyToMany(mappedBy = "disliked")
+    private Set<User> userDisliked;
+
+    @OneToMany(
+            mappedBy = "subject",
+            cascade =  CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private Set<UserEvalueSubject> userEvaluation;
+
+    @OneToMany(
+            mappedBy = "subject",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private Set<Comment> subjectComments;
+
+    public Subject() {
+        this.userLiked = new HashSet<>();
+        this.userDisliked = new HashSet<>();
+        this.userEvaluation = new HashSet<>();
+    }
 
     public Subject(String name) {
+        this();
         this.name = name;
     }
 
     public Subject(long id, String name){
+        this(name);
         this.id = id;
-        this.name = name;
-//        this.likes = new ArrayList<>();
-//        this.dislikes = new ArrayList<>();
-//        this.rate = new HashMap<>();
-//        this.comments = new ArrayList<>();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Subject)) return false;
+        Subject subject = (Subject) o;
+        return getId() == subject.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 
     public long getId() {
@@ -58,5 +79,29 @@ public class Subject {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<User> getUserLiked() {
+        return userLiked;
+    }
+
+    public void setUserLiked(Set<User> userLiked) {
+        this.userLiked = userLiked;
+    }
+
+    public Set<User> getUserDisliked() {
+        return userDisliked;
+    }
+
+    public void setUserDisliked(Set<User> userDisliked) {
+        this.userDisliked = userDisliked;
+    }
+
+    public Set<UserEvalueSubject> getUserEvaluation() {
+        return userEvaluation;
+    }
+
+    public void setUserEvaluation(Set<UserEvalueSubject> userEvaluation) {
+        this.userEvaluation = userEvaluation;
     }
 }

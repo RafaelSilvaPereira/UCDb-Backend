@@ -2,6 +2,8 @@ package com.ufcg.cc.psoft.ucdb;
 
 
 import com.ufcg.cc.psoft.ucdb.accessFilter.TokenFilter;
+import com.ufcg.cc.psoft.ucdb.service.LoginService;
+import io.jsonwebtoken.Claims;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -13,9 +15,7 @@ import org.springframework.web.filter.CorsFilter;
 @SpringBootApplication
 public class UcdbApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(UcdbApplication.class, args);
-    }
+    public static void main(String[] args) { SpringApplication.run(UcdbApplication.class, args); }
 
     @Bean
     public FilterRegistrationBean corsFilter() {
