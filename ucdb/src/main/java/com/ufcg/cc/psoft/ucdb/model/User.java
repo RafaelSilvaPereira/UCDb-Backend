@@ -54,16 +54,19 @@ public class User {
         this.enjoiyed = new HashSet<>();
         this.disliked = new HashSet<>();
         this.evaluatedSubjects = new HashSet<>();
+        this.userComments = new HashSet<>();
     }
 
-    public User( String email,  String firstName,  String secondName,  String password) {
+
+    public User(String email, String firstName, String secondName, String password) {
         this();
         this.email = email;
         this.firstName = firstName;
         this.secondName = secondName;
         this.password = password;
-
     }
+
+
 
     public String getEmail() {
         return this.email;
@@ -143,4 +146,14 @@ public class User {
     public void setDisliked(Set<Subject> disliked) {
         this.disliked = disliked;
     }
+
+    public User superficialCopy() {
+        return new User(this.getEmail(), this.getFirstName(), this.getSecondName(), this.getPassword());
+    }
+
+    public boolean isNIL() {
+        return this.getEmail() == null;
+    }
+
+
 }

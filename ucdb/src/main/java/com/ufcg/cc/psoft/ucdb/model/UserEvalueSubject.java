@@ -11,24 +11,27 @@ public class UserEvalueSubject {
     private SubjectUserID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("subjectID")
+    @MapsId("subject_id")
     private Subject subject;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("userEmail")
+    @MapsId("user_email")
     private User user;
 
-    @Column(name = "subjectNote")
+    @Column(name = "subject_note")
     private Double evaluation;
 
-    public UserEvalueSubject() {
-    }
+
 
     public UserEvalueSubject(Subject subject, User user, Double evaluation) {
+        this.id = new SubjectUserID(subject.getId(), user.getEmail());
         this.subject = subject;
         this.user = user;
         this.evaluation = evaluation;
+    }
+
+    public UserEvalueSubject() {
     }
 
     public SubjectUserID getId() {
@@ -68,14 +71,33 @@ public class UserEvalueSubject {
         if (this == o) return true;
         if (!(o instanceof UserEvalueSubject)) return false;
         UserEvalueSubject that = (UserEvalueSubject) o;
-        return getId().equals(that.getId()) &&
-                getSubject().equals(that.getSubject()) &&
-                getUser().equals(that.getUser()) &&
-                getEvaluation().equals(that.getEvaluation());
+        return getId().equals(that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getSubject(), getUser(), getEvaluation());
+        return Objects.hash(getId());
+    }
+
+    public UserEvalueSubject superficialCopy() {
+
+        Subject subjectClone;
+        if (this.subject != null && !this.subject.isNIL()) {
+            subjectClone = new Subject(this.getSubject().getId(), this.getSubject().getName());
+        } else {
+            subjectClone = null;
+        }
+        User userCopy;
+        if (this.user != null && !this.user.isNIL()) {
+            userCopy = new User(this.getUser().getEmail(), this.getUser().getFirstName(), this.getUser().getSecondName(), this.getUser().getPassword());
+        } else {
+            userCopy = null;
+        }
+        UserEvalueSubject userEvalueSubject = new UserEvalueSubject(subjectClone, userCopy, this.getEvaluation());
+        return userEvalueSubject;
+    }
+
+    public boolean isNIL() {
+        return this.getId().isNIl() && this.getSubject().isNIL() && this.getUser().isNIL() && (this.getEvaluation() == null || this.getEvaluation() == 0);
     }
 }

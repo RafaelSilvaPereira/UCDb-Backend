@@ -12,5 +12,12 @@ public class main {
         System.out.println(a);
         a.remove(2);
         System.out.println(a);
+
+        int size = 0;
+        for (Integer b : a) {
+            size++;
+        }
+
+        System.out.println("hello b i t c h");
     }
 }
