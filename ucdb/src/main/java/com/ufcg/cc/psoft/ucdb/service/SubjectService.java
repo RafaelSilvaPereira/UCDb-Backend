@@ -5,8 +5,10 @@ import com.ufcg.cc.psoft.ucdb.dao.CommentDAO;
 import com.ufcg.cc.psoft.ucdb.dao.SubjectDAO;
 import com.ufcg.cc.psoft.ucdb.dao.UserDAO;
 import com.ufcg.cc.psoft.ucdb.dao.UserEvalueSubjectDAO;
-import com.ufcg.cc.psoft.ucdb.model.*;
+import com.ufcg.cc.psoft.ucdb.model.Subject;
+import com.ufcg.cc.psoft.ucdb.model.User;
 import com.ufcg.cc.psoft.ucdb.view.SubjectProfile;
+import com.ufcg.cc.psoft.util.Util;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -30,14 +32,13 @@ public class SubjectService {
 
     private final UserEvalueSubjectDAO userEvalueSubjectDAO;
 
-    private final CommentDAO commentDAO;
-
+    private final Util util;
 
     public SubjectService(SubjectDAO subjectDAO, UserDAO userDAO, UserEvalueSubjectDAO userEvalueSubjectDAO, CommentDAO commentDAO ) {
         this.subjectDAO = subjectDAO;
         this.userDAO = userDAO;
         this.userEvalueSubjectDAO = userEvalueSubjectDAO;
-        this.commentDAO = commentDAO;
+        this.util = new Util();
     }
 
     public Subject create(Subject subject) { return subjectDAO.save(subject);}
@@ -55,7 +56,7 @@ public class SubjectService {
     }
 
     public List<SubjectProfile> findBySubstring(String substring) {
-        String auxSubstring = reconvertValidUrlToOriginalString(substring);
+        String auxSubstring = this.util.reconvertValidUrlToOriginalString(substring);
         List<Subject> subjectDAOSubstring = subjectDAO.findBySubstring(auxSubstring);
         List<SubjectProfile> subjectProfiles = subjectDAOSubstring.stream().map(subject -> new SubjectProfile(subject.superficialClone())).collect(Collectors.toList());
         return subjectProfiles;
@@ -64,7 +65,7 @@ public class SubjectService {
     public void saveAllSubjects() throws IOException, ParseException {
         JSONArray jsonArray;
         JSONParser jsonParser = new JSONParser();
-        FileReader archive = new FileReader("src/main/java/com/ufcg/cc/psoft/util/disciplina.json");
+        FileReader archive = new FileReader("src/main/java/com/ufcg/cc/psoft/Util/disciplina.json");
         jsonArray = (JSONArray) jsonParser.parse(archive);
         jsonArray.stream().forEach(object -> {
             JSONObject jsonobjectvalue = (JSONObject) object;
@@ -98,8 +99,8 @@ public class SubjectService {
     }
 
     public void unlike(JSONObject request) {
-        User user = getUser(request, "user");
-        Subject subject = getSubject(request, "subject");
+        User user = this.util.getUser(request, "user", userDAO);
+        Subject subject = this.util.getSubject(request, "subject", subjectDAO);
 
         unlike(user, subject);
 
@@ -107,8 +108,8 @@ public class SubjectService {
     }
 
     public void dislike(JSONObject request) {
-        User user = getUser(request, "user");
-        Subject subject = getSubject(request, "subject");
+        User user = this.util.getUser(request, "user", userDAO);
+        Subject subject = this.util.getSubject(request, "subject", subjectDAO);
 
         subject.getUserDisliked().add(user);
         user.getDisliked().add(subject);
@@ -120,68 +121,11 @@ public class SubjectService {
     }
 
     public void undislike(JSONObject request) {
-        User user = getUser(request, "user");
-        Subject subject = getSubject(request, "subject");
+        User user = this.util.getUser(request, "user", userDAO);
+        Subject subject = this.util.getSubject(request, "subject", subjectDAO);
 
         undislike(user, subject);
         updateDataBase(user, subject);
-    }
-
-    public void evalueSubject(JSONObject request) {
-        User user = getUser(request, "user");
-        Subject subject = getSubject(request, "subject");
-        Double note = Double.parseDouble((String) request.get("evaluation"));
-
-        if(user != null && subject != null && note != null && note >= 0) {
-            UserEvalueSubject userEvalue = new UserEvalueSubject(subject, user, note);
-            userEvalueSubjectDAO.save(userEvalue);
-        }
-    }
-
-    public void commentSubject(JSONObject request) {
-        User user = getUser(request, "user");
-        Subject subject = getSubject(request, "subject");
-        String comment = (String) request.get("comment");
-
-        if (user != null && subject != null && comment != null && !"".equals(comment.trim())) {
-            final Comment toSaveComment = new Comment(subject, user, comment);
-            this.commentDAO.save(toSaveComment);
-        }
-    }
-
-    public void addSubcommentToSubject(JSONObject request) {
-        User superCommentUser = getUser(request, "superCommentUserEmail").superficialCopy();
-
-        Subject superCommentSubject = getSubject(request, "superCommentSubjectID").superficialClone();
-
-        User subCommentUser = getUser(request, "subCommentUserEmail").superficialCopy();
-        /* a subCommentSubject deve ser a mesma já que subcomment simula a resposta a um comentario */
-
-        String txtComment = (String) request.get("comment");
-
-        if (superCommentUser != null && superCommentSubject != null && subCommentUser != null
-                && txtComment != null && !"".equals(txtComment.trim())) {
-            SubjectUserID subjectUserID = new SubjectUserID(superCommentSubject.getId(), superCommentUser.getEmail());
-
-            Comment superComment = this.commentDAO.findByIdAlternative(subjectUserID);
-
-            Comment subComment = new Comment(superCommentSubject, subCommentUser, txtComment, superComment);
-
-            superComment.getSubcomments().add(subComment);
-            this.commentDAO.save(subComment);
-            this.commentDAO.save(superComment);
-        }
-    }
-
-    private String reconvertValidUrlToOriginalString(String substring) {
-        String auxSubstring = "";
-        String[] strings = substring.split("_");
-
-        for (String code : strings) {
-            char a = ((char) Integer.parseInt(code));
-            auxSubstring += a;
-        }
-        return auxSubstring;
     }
 
     private void undislike(User user, Subject subject) {
@@ -210,14 +154,5 @@ public class SubjectService {
         return subjectDAO.findById(id);
     }
 
-    public void deleteComment(String subjectId, String userEmail) {
-        Long subjectIdLong = Long.parseLong(subjectId);
-        final Comment comment = this.commentDAO.findByIdAlternative(new SubjectUserID(subjectIdLong, userEmail));
-        comment.setVisible(false);
-        this.commentDAO.save(comment);
-    }
-
-
-    // ...
 
 }

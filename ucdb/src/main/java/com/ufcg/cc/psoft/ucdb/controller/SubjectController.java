@@ -97,48 +97,10 @@ public class SubjectController {
         this.subjectService.undislike(request);
     }
 
-    /**
-     * Sintaxe:
-     * {"user": "email_user", "subject" : "subject_id", "evaluation" : "um double"}
-     */
-    @PostMapping(value = "/evalue")
-    public void evalueSubject(@RequestBody JSONObject request) {
-        this.subjectService.evalueSubject(request);
-    }
-
-    /**
-     * Sintaxe:
-     * { "user":"email_user", "subject" : "subject_id", "comment" : "comentario"}
-     */
-    @PostMapping(value = "/comment/create")
-    public void commentSubject(@RequestBody JSONObject request) {
-        this.subjectService.commentSubject(request);
-    }
-
-    /**
-     * Sintaxe:
-     * {
-     * "superCommentUserEmail" : "email_do_usuario_do_comentario_pai"
-     * "superCommentSubjectID" : "id_da_disciplina_do_comentario_pai"
-     * "subCommentUserEmail" : "email_do_usuario_do_comentario_filho"
-     * "comment": "a resposta do comentario"
-     * }
-     */
-    @PostMapping(value = "/comment/reply")
-    public void addSubcommentToSubject(@RequestBody JSONObject request) {
-        this.subjectService.addSubcommentToSubject(request);
-    }
-
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity delete(@PathVariable long id) {
         subjectService.delete(id);
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
-    @DeleteMapping(value = "/comment/{id}")
-    public ResponseEntity delete(@PathVariable String id) {
-        subjectService.deleteComment(id.split("_")[1], id.split("_")[0]);
         return new ResponseEntity(HttpStatus.OK);
     }
 
