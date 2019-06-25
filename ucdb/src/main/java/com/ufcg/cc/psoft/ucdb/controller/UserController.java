@@ -3,6 +3,7 @@ package com.ufcg.cc.psoft.ucdb.controller;
 import com.ufcg.cc.psoft.ucdb.model.User;
 import com.ufcg.cc.psoft.ucdb.service.UserService;
 
+import com.ufcg.cc.psoft.ucdb.view.UserView;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -20,9 +21,9 @@ public class UserController {
 
     @PostMapping(value = "/")
     @ResponseBody
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<UserView> createUser(@RequestBody User user) {
         // aqui vao ficar verificacoes para ver se o user passado eh mesmo um com tipo correto
-        User responseUser = this.userService.create(user);
+        UserView responseUser = this.userService.create(user);
         return new ResponseEntity<>(responseUser, HttpStatus.CREATED);
     }
 

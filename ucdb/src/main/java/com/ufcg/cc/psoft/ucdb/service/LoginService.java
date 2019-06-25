@@ -4,6 +4,7 @@ import com.ufcg.cc.psoft.exceptions.InvalidLoginException;
 import com.ufcg.cc.psoft.exceptions.NotCorrespondingUserLogin;
 import com.ufcg.cc.psoft.ucdb.controller.LoginController;
 import com.ufcg.cc.psoft.ucdb.model.User;
+import com.ufcg.cc.psoft.ucdb.view.UserView;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -36,7 +37,7 @@ public class LoginService {
             throw new InvalidLoginException("Os valores passados na autentificação não correspondem a nenhum " +
                     "dos usuarios do banco de dados");
 
-        User registeredUser = userService.findByLogin(email,  password);
+        UserView registeredUser = userService.findByLogin(email,  password);
 
         if(registeredUser == null)
             throw  new NotCorrespondingUserLogin("User not found");
