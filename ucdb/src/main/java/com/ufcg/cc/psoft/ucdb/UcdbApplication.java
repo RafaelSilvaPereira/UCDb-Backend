@@ -30,16 +30,17 @@ public class UcdbApplication {
     @Bean
     public FilterRegistrationBean filterJwt() {
         FilterRegistrationBean filterRb = new FilterRegistrationBean();
-        filterRb.setFilter(new TokenFilter());
         filterRb.addUrlPatterns(
+                "/v1/subjects/id/*",
+                "/v1/subjects/search/*",
                 "/v1/subjects/like",
                 "/v1/subjects/dislike",
                 "/v1/subjects/unlike",
                 "/v1/subjects/undislike",
-                "/v1/subjects/sort/*",
-                "/v1/subjects/search/*",
                 "/v1/comment/create",
-                "/v1/comment/reply");
+                "/v1/comment/reply",
+                "/v1/comment/*");
+        filterRb.setFilter(new TokenFilter());
 
         return filterRb;
     }
