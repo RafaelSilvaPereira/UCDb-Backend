@@ -32,7 +32,7 @@ public class UcdbApplication {
         FilterRegistrationBean filterRb = new FilterRegistrationBean();
         filterRb.addUrlPatterns(
                 "/v1/subjects/id/*",
-                "/v1/subjects/search/*",
+                "/v1/subjects/sort/*",
                 "/v1/subjects/like",
                 "/v1/subjects/dislike",
                 "/v1/subjects/unlike",
