@@ -2,11 +2,10 @@ package com.ufcg.cc.psoft.ucdb.controller;
 
 import com.ufcg.cc.psoft.ucdb.model.User;
 import com.ufcg.cc.psoft.ucdb.service.UserService;
-
 import com.ufcg.cc.psoft.ucdb.view.UserView;
+import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,9 +26,18 @@ public class UserController {
         return new ResponseEntity<>(responseUser, HttpStatus.CREATED);
     }
 
-    @GetMapping(value = "/private")/* essa utl privada poderia ser qualquer outra "/carambolas" */
+    /* essa utl privada poderia ser qualquer outra "/carambolas" */
+    @PostMapping(value = "/enjoyed")
     @ResponseBody
-    public ResponseEntity<String> teste1() {
-        return new ResponseEntity<>("Assim funciona um metodo privado.", HttpStatus.OK);
+    public ResponseEntity<Boolean> enjoyeds(@RequestBody JSONObject request) {
+        final Boolean enjoyed = this.userService.enjoyed(request);
+        return new ResponseEntity<>(enjoyed, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/disliked")
+    @ResponseBody
+    public ResponseEntity<Boolean> dislikeds(@RequestBody JSONObject request) {
+        final Boolean enjoyed = this.userService.disliked(request);
+        return new ResponseEntity<>(enjoyed, HttpStatus.OK);
     }
 }

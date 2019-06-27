@@ -4,15 +4,9 @@ import com.ufcg.cc.psoft.exceptions.InvalidLoginException;
 import com.ufcg.cc.psoft.exceptions.NotCorrespondingUserLogin;
 import com.ufcg.cc.psoft.ucdb.model.User;
 import com.ufcg.cc.psoft.ucdb.service.LoginService;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.xml.bind.DatatypeConverter;
-import java.util.Date;
 
 /**
  * LoginController: LoginController, this class is responsible for managing a system of user authentication
@@ -21,10 +15,6 @@ import java.util.Date;
 @RestController
 @RequestMapping("v1/login")
 public class LoginController {
-
-
-
-
 
 
     private LoginService loginService;

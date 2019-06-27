@@ -38,7 +38,7 @@ public class CommentController {
         this.commentService.addSubcommentToSubject(request);
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "/{id}") /*o id eh uma string composta no formato subjectID_UserEmail */
     public ResponseEntity delete(@PathVariable String id) {
         this.commentService.deleteComment(id.split("_")[1], id.split("_")[0]);
         return new ResponseEntity(HttpStatus.OK);

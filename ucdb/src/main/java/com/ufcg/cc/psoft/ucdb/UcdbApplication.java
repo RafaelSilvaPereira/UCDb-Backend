@@ -1,9 +1,8 @@
 package com.ufcg.cc.psoft.ucdb;
 
 
+
 import com.ufcg.cc.psoft.ucdb.accessFilter.TokenFilter;
-import com.ufcg.cc.psoft.ucdb.service.LoginService;
-import io.jsonwebtoken.Claims;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -28,6 +27,21 @@ public class UcdbApplication {
         return bean;
     }
 
+    @Bean
+    public FilterRegistrationBean filterJwt() {
+        FilterRegistrationBean filterRb = new FilterRegistrationBean();
+        filterRb.setFilter(new TokenFilter());
+        filterRb.addUrlPatterns(
+                "/v1/subjects/like",
+                "/v1/subjects/dislike",
+                "/v1/subjects/unlike",
+                "/v1/subjects/undislike",
+                "/v1/subjects/sort/*",
+                "/v1/subjects/search/*",
+                "/v1/comment/create",
+                "/v1/comment/reply");
 
+        return filterRb;
+    }
 
 }

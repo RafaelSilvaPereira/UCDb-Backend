@@ -2,10 +2,11 @@ package com.ufcg.cc.psoft.ucdb.controller;
 
 import com.ufcg.cc.psoft.ucdb.model.Subject;
 import com.ufcg.cc.psoft.ucdb.service.SubjectService;
-import com.ufcg.cc.psoft.ucdb.view.SubjectProfile;
+import com.ufcg.cc.psoft.ucdb.view.GenericSubjectProfile;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,25 +30,27 @@ public class SubjectController {
 
     @GetMapping(value = "/id/{id}")
     @ResponseBody
-    public ResponseEntity<SubjectProfile> findById(@PathVariable long id) {
-        SubjectProfile subject = subjectService.findById(id);
+    public ResponseEntity<GenericSubjectProfile> findById(@PathVariable long id) {
+        GenericSubjectProfile subject = subjectService.findById(id);
 
         return new ResponseEntity<>(subject, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/")
-    public ResponseEntity<List> findAll() {
 
-        List subjects = subjectService.findAll();
-
-        return new ResponseEntity<List>(subjects, HttpStatus.OK);
+    /*
+     * tipo de order aceitadas: likes, dislikes, comments, proportion
+     * */
+    @GetMapping(value = "/sort/{order}")
+    public ResponseEntity<List> findAll(@PathVariable String order) {
+        List subjects = subjectService.findAll(order);
+        return new ResponseEntity<>(subjects, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/search/{substring}")
+    @GetMapping(value = "/search/{substring}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List> findBySubstring(@PathVariable String substring){
-        List<SubjectProfile> subjects = subjectService.findBySubstring(substring);
+        List<GenericSubjectProfile> subjects = subjectService.findBySubstring(substring);
 
-        return new ResponseEntity<List>(subjects, HttpStatus.OK);
+        return new ResponseEntity<>(subjects, HttpStatus.OK);
     }
 
     //provavelmente não vai ficar acessivel
@@ -57,13 +60,13 @@ public class SubjectController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    /**
+    /*
      * TODO: OS METODOS VAO SER ALTERADOS PARA QUE SEJA APENAS POSSIVEL ACESSA-LOS COM O TOKEN DE AUTENTIFICACAO
      */
 
     /**
      * Sintaxe:
-     * { "user":"email_user", "subject" : "subject_id" }
+     * { "user_token":"user_token", "subject" : "subject_id" }
      */
     @PostMapping(value = "/like")
     public void beLike(@RequestBody JSONObject request) {

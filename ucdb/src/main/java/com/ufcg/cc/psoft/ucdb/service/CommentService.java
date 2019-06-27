@@ -34,8 +34,8 @@ public class CommentService {
     }
 
     public void commentSubject(JSONObject request) {
-        User user = this.util.getUser(request, "user", userDAO);
-        Subject subject = this.util.getSubject(request, "subject", subjectDAO);
+        User user = this.util.getUser(request, userDAO);
+        Subject subject = this.util.getSubject(request, subjectDAO);
         String comment = (String) request.get("comment");
 
         if (user != null && subject != null && comment != null && !"".equals(comment.trim())) {
@@ -45,13 +45,12 @@ public class CommentService {
     }
 
     public void addSubcommentToSubject(JSONObject request) {
-        User superCommentUser = this.util.getUser(request, "superCommentUserEmail", userDAO).superficialCopy();
-
-        Subject superCommentSubject = this.util.getSubject(request, "superCommentSubjectID", subjectDAO).superficialClone();
-
-        User subCommentUser = this.util.getUser(request, "subCommentUserEmail", userDAO).superficialCopy();
+        User superCommentUser = this.util.getSuperUserComment(request, "super_comment_user_token", userDAO)
+                .superficialCopy();
+        Subject superCommentSubject = this.util.getSubject(request, subjectDAO).superficialClone();
+        User subCommentUser = this.util.getSuperUserComment(request, "reply_comment_user_token", userDAO)
+                .superficialCopy();
         /* a subCommentSubject deve ser a mesma já que subcomment simula a resposta a um comentario */
-
         String txtComment = (String) request.get("comment");
 
         if (superCommentUser != null && superCommentSubject != null && subCommentUser != null

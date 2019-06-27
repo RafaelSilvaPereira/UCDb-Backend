@@ -1,37 +1,24 @@
 package com.ufcg.cc.psoft.ucdb.view;
 
-import com.ufcg.cc.psoft.ucdb.model.Comment;
-import com.ufcg.cc.psoft.ucdb.model.Subject;
-import com.ufcg.cc.psoft.ucdb.model.UserEvalueSubject;
+import java.util.Collection;
 
-import java.util.Set;
+public class SubjectProfile extends GenericSubjectProfile {
 
-public class SubjectProfile {
-
-    private Long id;
-    private int dislikes;
     private int likes;
-    private String name;
+    private int dislikes;
+    //    private Double subjectAverage;
+    private Collection<CommentView> comments;
 
-    private Set<Comment> comments;
-    private Double subjectAverage;
 
     public SubjectProfile() {
+        super();
     }
 
-    public SubjectProfile(Subject subject) {
-        if (subject != null) {
-            this.id = subject.getId();
-            this.name = subject.getName();
-            this.comments = subject.getSubjectComments();
-            this.likes = subject.getUserLiked().size();
-            this.dislikes = subject.getUserDisliked().size();
-            this.subjectAverage = calculeSubjectAvarege(subject.getUserEvaluation());
-        }
-    }
-
-    public Long getId() {
-        return id;
+    public SubjectProfile(Long id, String name, int dislikes, int likes, Collection<CommentView> comments) {
+        super(id, name);
+        this.dislikes = dislikes;
+        this.likes = likes;
+        this.comments = comments;
     }
 
     public int getDislikes() {
@@ -42,28 +29,35 @@ public class SubjectProfile {
         return likes;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public Set<Comment> getComments() {
+    public Collection<CommentView> getComments() {
         return comments;
     }
 
-    public Double getSubjectAverage() {
-        return subjectAverage;
-    }
+//    public Double getSubjectAverage() {
+//        return subjectAverage;
+//    }
 
-    private Double calculeSubjectAvarege(Set<UserEvalueSubject> usersEvaluation) {
-        double sum = 0;
-        int size = 0;
-        for (UserEvalueSubject userEvalueSubject : usersEvaluation) {
-            sum += userEvalueSubject.getEvaluation();
-            size++;
+    public int getProportion() {
+        int answer = 0;
+        if (this.getLikes() + this.getDislikes() == 0) {
+            answer = 0;
+        } else {
+            answer = this.getLikes() / (this.getLikes() + this.getDislikes());
         }
-
-        Double avg = (size == 0) ? 0 : (sum / size);
-
-        return Double.parseDouble(String.format("%.2f", avg).replace(",", "."));
+        return answer;
     }
+
+//    private Double calculeSubjectAvarege(Set<UserEvalueSubject> usersEvaluation) {
+//        double sum = 0;
+//        int size = 0;
+//        for (UserEvalueSubject userEvalueSubject : usersEvaluation) {
+//            sum += userEvalueSubject.getEvaluation();
+//            size++;
+//        }
+//
+//        Double avg = (size == 0) ? 0 : (sum / size);
+//
+//        return Double.parseDouble(String.format("%.2f", avg).replace(",", "."));
+//    }
+
 }

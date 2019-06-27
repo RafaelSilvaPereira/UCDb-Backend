@@ -1,7 +1,7 @@
 package com.ufcg.cc.psoft.ucdb.view;
 
-import com.ufcg.cc.psoft.ucdb.model.Comment;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -10,9 +10,9 @@ public class CommentView {
     private String userName;
     private String userSecondName;
     private String comment;
-    private List<Comment> subcomments;
+    private Collection<CommentView> subcomments; /*CommentView vai gerar uma lista de comentarios que são comments view*/
 
-    public CommentView(String userName, String userSecondName, String comment, List<Comment> subcomments) {
+    public CommentView(String userName, String userSecondName, String comment, Collection<CommentView> subcomments) {
         this.userName = userName;
         this.userSecondName = userSecondName;
         this.comment = comment;
@@ -43,11 +43,11 @@ public class CommentView {
         this.comment = comment;
     }
 
-    public List<Comment> getSubcomments() {
+    public Collection<CommentView> getSubcomments() {
         return subcomments;
     }
 
-    public void setSubcomments(List<Comment> subcomments) {
+    public void setSubcomments(List<CommentView> subcomments) {
         this.subcomments = subcomments;
     }
 

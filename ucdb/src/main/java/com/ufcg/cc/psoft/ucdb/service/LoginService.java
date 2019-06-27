@@ -2,10 +2,8 @@ package com.ufcg.cc.psoft.ucdb.service;
 
 import com.ufcg.cc.psoft.exceptions.InvalidLoginException;
 import com.ufcg.cc.psoft.exceptions.NotCorrespondingUserLogin;
-import com.ufcg.cc.psoft.ucdb.controller.LoginController;
 import com.ufcg.cc.psoft.ucdb.model.User;
 import com.ufcg.cc.psoft.ucdb.view.UserView;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.xml.bind.DatatypeConverter;
 import java.util.Date;
 
 
@@ -29,23 +26,22 @@ public class LoginService {
     private UserService userService;
 
     @NotNull
-    public ResponseEntity<LoginResponse> getLoginResponseEntity(@RequestBody User requestUser) throws NotCorrespondingUserLogin {
+    public ResponseEntity<LoginResponse> getLoginResponseEntity(@RequestBody User requestUser)
+            throws NotCorrespondingUserLogin {
         String email = requestUser.getEmail();
         String password= requestUser.getPassword();
 
-        if(isInvalidValue(email) || isInvalidValue(password))
+        if (isInvalidValue(email) || isInvalidValue(password)) {
             throw new InvalidLoginException("Os valores passados na autentificação não correspondem a nenhum " +
                     "dos usuarios do banco de dados");
+        }
 
         UserView registeredUser = userService.findByLogin(email,  password);
-
         if(registeredUser == null)
             throw  new NotCorrespondingUserLogin("User not found");
 
-
         String userToken = getToken(registeredUser.getEmail());
-
-        return new ResponseEntity<LoginResponse>(new LoginResponse(userToken), HttpStatus.OK);
+        return new ResponseEntity<>(new LoginResponse(userToken), HttpStatus.OK);
     }
 
     /**
@@ -70,12 +66,6 @@ public class LoginService {
                 compact();
     }
 
-    public Claims decodeJWT(String jwt) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(DatatypeConverter.parseBase64Binary(TOKEN_KEY))
-                .parseClaimsJws(jwt).getBody();
-        return claims;
-    }
 
     /**
      * Simple object representing the login response

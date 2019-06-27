@@ -93,6 +93,7 @@ public class UserEvalueSubject {
         } else {
             userCopy = null;
         }
+
         UserEvalueSubject userEvalueSubject = new UserEvalueSubject(subjectClone, userCopy, this.getEvaluation());
         return userEvalueSubject;
     }
