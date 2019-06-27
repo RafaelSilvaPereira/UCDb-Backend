@@ -21,13 +21,6 @@ public class SubjectController {
 
     public SubjectController(SubjectService subjectService) { this.subjectService = subjectService; }
 
-    // esse metodo aqui eh uma gambiarrra para que inicie-se o banco de dados
-    @GetMapping(value = "/create/allsubjects")
-    public void saveAllSubjects() throws IOException, ParseException {
-        this.subjectService.saveAllSubjects();
-
-    }
-
     @GetMapping(value = "/id/{id}")
     @ResponseBody
     public ResponseEntity<GenericSubjectProfile> findById(@PathVariable long id) {
@@ -99,22 +92,4 @@ public class SubjectController {
     public void beUndislike(@RequestBody JSONObject request) {
         this.subjectService.undislike(request);
     }
-
-
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity delete(@PathVariable long id) {
-        subjectService.delete(id);
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
-
-    // provavelmente não vai ficar acessivel para todo mundo ver
-    @PostMapping(value = "/")
-    @ResponseBody
-    public ResponseEntity<Subject> createSubject(@RequestBody Subject subject) {
-        Subject responseSubject = this.subjectService.create(subject);
-        return new ResponseEntity<>(responseSubject, HttpStatus.CREATED);
-    }
-
-
 }

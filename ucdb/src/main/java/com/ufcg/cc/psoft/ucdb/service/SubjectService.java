@@ -124,7 +124,7 @@ public class SubjectService {
     public void saveAllSubjects() throws IOException, ParseException {
         JSONArray jsonArray;
         JSONParser jsonParser = new JSONParser();
-        FileReader archive = new FileReader("src/main/java/com/ufcg/cc/psoft/Util/disciplina.json");
+        FileReader archive = new FileReader("src/main/java/com/ufcg/cc/psoft/util/disciplina.json");
         jsonArray = (JSONArray) jsonParser.parse(archive);
         jsonArray.stream().forEach(object -> {
             JSONObject jsonobjectvalue = (JSONObject) object;
