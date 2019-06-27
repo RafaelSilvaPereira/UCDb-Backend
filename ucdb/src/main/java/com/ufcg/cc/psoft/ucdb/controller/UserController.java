@@ -23,7 +23,12 @@ public class UserController {
     public ResponseEntity<UserView> createUser(@RequestBody User user) {
         // aqui vao ficar verificacoes para ver se o user passado eh mesmo um com tipo correto
         UserView responseUser = this.userService.create(user);
-        return new ResponseEntity<>(responseUser, HttpStatus.CREATED);
+
+        if (responseUser == null) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        } else {
+            return new ResponseEntity<>(responseUser, HttpStatus.CREATED);
+        }
     }
 
     /* essa utl privada poderia ser qualquer outra "/carambolas" */

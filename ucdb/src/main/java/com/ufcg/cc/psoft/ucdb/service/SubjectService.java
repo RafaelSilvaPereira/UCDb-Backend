@@ -208,7 +208,7 @@ public class SubjectService {
         final int cloneLikes = superficialClone.getUserDisliked().size();
 //        final double cloneAverage = superficialClone.getAverage();
 
-        final Set<Comment> subjectComments = superficialClone.getSubjectComments();
+        final List<Comment> subjectComments = superficialClone.getSubjectComments();
         return new SubjectProfile(cloneId, cloneName, cloneLikes, cloneDislikes,
                 setViewComments(subjectComments));
     }

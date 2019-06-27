@@ -23,8 +23,14 @@ public class UserService {
     }
 
     public UserView create(User user) {
-        User copy = userDAO.save(user);
-        return new UserView(copy.getEmail(),copy.getFirstName(),copy.getSecondName());
+        String email = user.getEmail();
+        if (this.userDAO.userFindByEmail(email) != null){
+            return null;
+        } else {
+            User copy = userDAO.save(user);
+            return new UserView(copy.getEmail(),copy.getFirstName(),copy.getSecondName());
+        }
+
     }
 
     public UserView findByLogin(String email, String password) {
