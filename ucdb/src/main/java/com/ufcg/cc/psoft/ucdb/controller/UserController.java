@@ -27,17 +27,17 @@ public class UserController {
     }
 
     /* essa utl privada poderia ser qualquer outra "/carambolas" */
-    @PostMapping(value = "/enjoyed")
+    @PostMapping(value = "/enjoyed/{id}")
     @ResponseBody
-    public ResponseEntity<Boolean> enjoyeds(@RequestBody JSONObject request) {
-        final Boolean enjoyed = this.userService.enjoyed(request);
+    public ResponseEntity<Boolean> enjoyeds(@RequestHeader ("Authorization") String token, @PathVariable long id) {
+        final Boolean enjoyed = this.userService.enjoyed(token.substring(7), id);
         return new ResponseEntity<>(enjoyed, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/disliked")
+    @PostMapping(value = "/disliked/{id}")
     @ResponseBody
-    public ResponseEntity<Boolean> dislikeds(@RequestBody JSONObject request) {
-        final Boolean enjoyed = this.userService.disliked(request);
+    public ResponseEntity<Boolean> dislikeds(@RequestHeader ("Authorization") String token, @PathVariable long id) {
+        final Boolean enjoyed = this.userService.disliked(token.substring(7), id);
         return new ResponseEntity<>(enjoyed, HttpStatus.OK);
     }
 }

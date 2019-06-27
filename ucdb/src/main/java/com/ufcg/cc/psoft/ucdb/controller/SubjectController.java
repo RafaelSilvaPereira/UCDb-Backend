@@ -61,35 +61,35 @@ public class SubjectController {
      * Sintaxe:
      * { "user_token":"user_token", "subject" : "subject_id" }
      */
-    @PostMapping(value = "/like")
-    public void beLike(@RequestBody JSONObject request) {
-        this.subjectService.like(request);
+    @PostMapping(value = "/like/{id}")
+    public void beLike(@RequestHeader ("Authorization") String token, @PathVariable long id) {
+        this.subjectService.like(token.substring(7), id);
     }
 
     /**
      * Sintaxe:
      * { "user":"email_user", "subject" : "subject_id" }
      */
-    @PostMapping(value = "/unlike")
-    public void beUnlike(@RequestBody JSONObject request) {
-        this.subjectService.unlike(request);
+    @PostMapping(value = "/unlike/{id}")
+    public void beUnlike(@RequestHeader ("Authorization") String token, @PathVariable long id) {
+        this.subjectService.unlike(token.substring(7), id);
     }
 
     /**
      * Sintaxe:
      * { "user":"email_user", "subject" : "subject_id" }
      */
-    @PostMapping(value = "/dislike")
-    public void beDislike(@RequestBody JSONObject request) {
-        this.subjectService.dislike(request);
+    @PostMapping(value = "/dislike/{id}")
+    public void beDislike(@RequestHeader ("Authorization") String token, @PathVariable long id) {
+        this.subjectService.dislike(token.substring(7), id);
     }
 
     /**
      * Sintaxe:
      * { "user":"email_user", "subject" : "subject_id" }
      */
-    @PostMapping(value = "/undislike")
-    public void beUndislike(@RequestBody JSONObject request) {
-        this.subjectService.undislike(request);
+    @PostMapping(value = "/undislike/{id}")
+    public void beUndislike(@RequestHeader ("Authorization") String token, @PathVariable long id) {
+        this.subjectService.undislike(token.substring(7), id);
     }
 }

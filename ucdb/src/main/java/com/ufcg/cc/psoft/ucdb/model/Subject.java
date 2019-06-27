@@ -36,7 +36,7 @@ public class Subject {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<Comment> subjectComments;
+    private Set<Comment> subjectComments;
 
     public Subject() {
         this.userLiked = new HashSet<>();
@@ -113,7 +113,7 @@ public class Subject {
             Set<User> likes = cloneUserOption(this.getUserLiked());
             Set<User> dislikes = cloneUserOption(this.getUserDisliked());
 //            Set<UserEvalueSubject> evaluationClone = cloneUserEvaluation();
-            List<Comment> commentsClone = cloneUserComments();
+            Set<Comment> commentsClone = cloneUserComments();
 
             subjectClone.setId(this.getId());
             subjectClone.setName(this.getName());
@@ -127,8 +127,8 @@ public class Subject {
         return subjectClone;
     }
 
-    private List<Comment> cloneUserComments() {
-        List<Comment> comments = new ArrayList<>();
+    private Set<Comment> cloneUserComments() {
+        Set<Comment> comments = new HashSet<>();
         if (!isANILCOllection(this.getSubjectComments())) {
             for (Comment comment : this.getSubjectComments()) {
                 if (comment != null && !comment.isNIL() && !comment.isSubComment() && comment.isVisble()) {

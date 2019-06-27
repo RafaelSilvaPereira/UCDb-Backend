@@ -14,11 +14,11 @@ import java.nio.charset.StandardCharsets;
 
 public class Util {
 
-    public User getUser(JSONObject request, UserDAO userDAO) {
+    public User getUser(String token, UserDAO userDAO) {
 //        String userEmail = (String) request.get("user_token"); isso é para testes
         // TODO: GERA EXCEOTION
         // TODO: ERA BOM VERICAR SE O TOKEN EXISTE, SE ELE EH VALIDO
-        String userEmail = this.decodeJWT((String) request.get("user_token"), "HAPPY_TOMATO").getSubject();
+        String userEmail = this.decodeJWT(token, "HAPPY_TOMATO").getSubject();
 
         // TODO: SE FOR NECESSARIO DEVERIA TER UMA VERIFCACAO PARA VER SE USER != NULL
         final User user = userDAO.userFindByEmail(userEmail);

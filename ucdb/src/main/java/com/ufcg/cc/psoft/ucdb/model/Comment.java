@@ -13,8 +13,9 @@ import java.util.Objects;
 @Table(name = "Comment")
 public class Comment {
 
-    @EmbeddedId
-    private SubjectUserID id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private long id;
 
     @Column(name = "subjectComment") /* definindo o texto*/
     private String comment;
@@ -31,15 +32,12 @@ public class Comment {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("user")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("subject")
     private Subject subject;
 
     public Comment() {
-        this.id = new SubjectUserID();
         this.comment = "";
         this.superComment = null;
         this.subcomments = new ArrayList<>();
@@ -48,7 +46,6 @@ public class Comment {
 
     public Comment(Subject subject, User user, String comment) {
         this();
-        this.id = new SubjectUserID(subject.getId(), user.getEmail());
         this.subject = subject;
         this.user = user;
         this.comment = comment;
@@ -59,13 +56,6 @@ public class Comment {
         this.superComment = superComment;
     }
 
-    public SubjectUserID getId() {
-        return id;
-    }
-
-    public void setId(SubjectUserID id) {
-        this.id = id;
-    }
 
     public Comment getSuperComment() {
         return superComment;
@@ -86,6 +76,15 @@ public class Comment {
     public String getComment() {
         return comment;
     }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
 
     public void setComment(String comment) {
         this.comment = comment;
@@ -115,12 +114,16 @@ public class Comment {
         this.visible = visible;
     }
 
+    public Boolean getVisible() {
+        return visible;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Comment)) return false;
         Comment comment = (Comment) o;
-        return getId().equals(comment.getId());
+        return getId() == comment.getId();
     }
 
     @Override
@@ -134,7 +137,7 @@ public class Comment {
         if (!this.isNIL()) {
             toString = String.format("Comement: {\n id = {%s, %s}\n superComment = {%s} subComments = {%s}," +
                             " textComment = {%s}",
-                    this.getId().getSubjectID(), this.getId().getUserID(), this.getSuperComment().toString(),
+                    this.getId(),  this.getSuperComment().toString(),
                     Arrays.toString(this.getSubcomments().toArray()));
         } else {
             toString = "NIL";
@@ -144,7 +147,7 @@ public class Comment {
     }
 
     public boolean isNIL() {
-        return this.getId().isNIl();
+        return this.getId() == 0;
     }
 
     public Comment superficialCopy() {

@@ -32,11 +32,10 @@ public class UserService {
         return new UserView(copy.getEmail(),copy.getFirstName(),copy.getSecondName());
     }
 
-    public Boolean enjoyed(JSONObject request) {
+    public Boolean enjoyed(String token, long subjectID) {
         boolean answer = false;
-        if (request != null) {
-            Long subjectID = Long.parseLong((String) request.get("subject"));
-            final User user = this.util.getUser(request, this.userDAO);
+        if (subjectID != 0) {
+            final User user = this.util.getUser(token, this.userDAO);
             for (Subject s : user.getEnjoiyed()) {
                 if (s.getId() == subjectID) {
                     answer = true;
@@ -50,11 +49,10 @@ public class UserService {
         return answer;
     }
 
-    public Boolean disliked(JSONObject request) {
+    public Boolean disliked(String token, long subjectID) {
         boolean answer = false;
-        if (request != null) {
-            Long subjectID = Long.parseLong((String) request.get("subject"));
-            final User user = this.util.getUser(request, this.userDAO);
+        if (subjectID != 0) {
+            final User user = this.util.getUser(token, this.userDAO);
             for (Subject s : user.getDisliked()) {
                 if (s.getId() == subjectID) {
                     answer = true;

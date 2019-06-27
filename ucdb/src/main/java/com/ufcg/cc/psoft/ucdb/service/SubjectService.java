@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -59,9 +60,6 @@ public class SubjectService {
             SubjectProfile subjectProfile = getSubjectProfile(subject.superficialClone());
             collect.add(subjectProfile);
         }
-//        Stream<@NotNull SubjectProfile> collect = subjectDAOAll.stream().map(this::getSubjectProfile);
-//        List answer = getAllSubjectProfile(sorterStrategy, ));
-
         return getAllSubjectProfile(sorterStrategy, collect);
 
     }
@@ -135,9 +133,9 @@ public class SubjectService {
 
     public void deleteAll() { subjectDAO.deleteAll();}
 
-    public void like(JSONObject request) {
-        User user = this.util.getUser(request, userDAO);
-        Subject subject = getSubject(request, "subject");
+    public void like(String token, long id) {
+        User user = this.util.getUser(token, userDAO);
+        Subject subject = this.subjectDAO.findById(id);
 
 
         user.getEnjoiyed().add(subject);
@@ -147,9 +145,9 @@ public class SubjectService {
 
     }
 
-    public void dislike(JSONObject request) {
-        User user = this.util.getUser(request, userDAO);
-        Subject subject = this.util.getSubject(request, subjectDAO);
+    public void dislike(String token, long id) {
+        User user = this.util.getUser(token, userDAO);
+        Subject subject = this.subjectDAO.findById(id);
 
 
         subject.getUserDisliked().add(user);
@@ -161,9 +159,9 @@ public class SubjectService {
 
     }
 
-    public void unlike(JSONObject request) {
-        User user = this.util.getUser(request, userDAO);
-        Subject subject = this.util.getSubject(request, subjectDAO);
+    public void unlike(String token, long id) {
+        User user = this.util.getUser(token, userDAO);
+        Subject subject = this.subjectDAO.findById(id);
 
         unlike(user, subject);
 
@@ -172,9 +170,9 @@ public class SubjectService {
 
 
 
-    public void undislike(JSONObject request) {
-        User user = this.util.getUser(request, userDAO);
-        Subject subject = this.util.getSubject(request, subjectDAO);
+    public void undislike(String token, long id) {
+        User user = this.util.getUser(token, userDAO);
+        Subject subject = this.subjectDAO.findById(id);
 
         undislike(user, subject);
         updateDataBase(user, subject);
@@ -210,7 +208,7 @@ public class SubjectService {
         final int cloneLikes = superficialClone.getUserDisliked().size();
 //        final double cloneAverage = superficialClone.getAverage();
 
-        final List<Comment> subjectComments = superficialClone.getSubjectComments();
+        final Set<Comment> subjectComments = superficialClone.getSubjectComments();
         return new SubjectProfile(cloneId, cloneName, cloneLikes, cloneDislikes,
                 setViewComments(subjectComments));
     }

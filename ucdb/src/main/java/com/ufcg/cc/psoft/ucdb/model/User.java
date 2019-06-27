@@ -34,13 +34,6 @@ public class User {
     )
     private Set<Subject> disliked;
 
-    @OneToMany(
-            mappedBy = "user",
-            cascade =  CascadeType.ALL,
-            orphanRemoval = true
-    )
-    private Set<UserEvalueSubject> evaluatedSubjects;
-
 
     @OneToMany(
             mappedBy = "user",
@@ -53,7 +46,6 @@ public class User {
     public User() {
         this.enjoiyed = new HashSet<>();
         this.disliked = new HashSet<>();
-        this.evaluatedSubjects = new HashSet<>();
         this.userComments = new HashSet<>();
     }
 
@@ -98,14 +90,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Set<UserEvalueSubject> getEvaluatedSubjects() {
-        return evaluatedSubjects;
-    }
-
-    public void setEvaluatedSubjects(Set<UserEvalueSubject> evaluatedSubjects) {
-        this.evaluatedSubjects = evaluatedSubjects;
     }
 
     @Override
