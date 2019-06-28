@@ -16,7 +16,7 @@ public interface CommentDAO <T,ID extends Serializable> extends JpaRepository<Co
 //    @Query(value = "SELECT c FROM Comment c WHERE c.id=:id")
 //    Comment findByIdAlternative(@Param("id") Long id);
 
-    Comment findByUserEmailAndSubjectId(@Param("id") Long subjectIdLong, @Param("email") String userEmail);
+//    Comment findByCommentIdAndStudentEmail(@Param("id") Long commentId, @Param("email") String studentEmail);
 
     @Query(value = "SELECT c FROM Comment c WHERE c.id=:id")
     Comment findByIdA(@Param("id")long commentId);

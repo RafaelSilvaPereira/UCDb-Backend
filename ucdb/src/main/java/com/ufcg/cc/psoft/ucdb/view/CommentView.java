@@ -7,32 +7,32 @@ import java.util.Objects;
 
 public class CommentView {
 
-    private String userName;
-    private String userSecondName;
+    private String studentName;
+    private String studentSecondName;
     private String comment;
     private Collection<CommentView> subcomments; /*CommentView vai gerar uma lista de comentarios que são comments view*/
 
-    public CommentView(String userName, String userSecondName, String comment, Collection<CommentView> subcomments) {
-        this.userName = userName;
-        this.userSecondName = userSecondName;
+    public CommentView(String studentName, String studentSecondName, String comment, Collection<CommentView> subcomments) {
+        this.studentName = studentName;
+        this.studentSecondName = studentSecondName;
         this.comment = comment;
         this.subcomments = subcomments;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getStudentName() {
+        return studentName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
     }
 
-    public String getUserSecondName() {
-        return userSecondName;
+    public String getStudentSecondName() {
+        return studentSecondName;
     }
 
-    public void setUserSecondName(String userSecondName) {
-        this.userSecondName = userSecondName;
+    public void setStudentSecondName(String studentSecondName) {
+        this.studentSecondName = studentSecondName;
     }
 
     public String getComment() {
@@ -56,22 +56,22 @@ public class CommentView {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CommentView that = (CommentView) o;
-        return Objects.equals(userName, that.userName) &&
-                Objects.equals(userSecondName, that.userSecondName) &&
+        return Objects.equals(studentName, that.studentName) &&
+                Objects.equals(studentSecondName, that.studentSecondName) &&
                 Objects.equals(comment, that.comment) &&
                 Objects.equals(subcomments, that.subcomments);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userName, userSecondName, comment, subcomments);
+        return Objects.hash(studentName, studentSecondName, comment, subcomments);
     }
 
     @Override
     public String toString() {
         return "CommentView{" +
-                "userName='" + userName + '\'' +
-                ", userSecondName='" + userSecondName + '\'' +
+                "studentName='" + studentName + '\'' +
+                ", studentSecondName='" + studentSecondName + '\'' +
                 ", comment='" + comment +
                 '}';
     }

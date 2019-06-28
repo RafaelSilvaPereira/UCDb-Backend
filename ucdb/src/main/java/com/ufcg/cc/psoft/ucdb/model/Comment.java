@@ -32,7 +32,7 @@ public class Comment {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    private Student student;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Subject subject;
@@ -44,15 +44,15 @@ public class Comment {
         this.visible = true;
     }
 
-    public Comment(Subject subject, User user, String comment) {
+    public Comment(Subject subject, Student student, String comment) {
         this();
         this.subject = subject;
-        this.user = user;
+        this.student = student;
         this.comment = comment;
     }
 
-    public Comment(Subject subject, User user, String comment, Comment superComment) {
-        this(subject, user, comment);
+    public Comment(Subject subject, Student student, String comment, Comment superComment) {
+        this(subject, student, comment);
         this.superComment = superComment;
     }
 
@@ -90,12 +90,12 @@ public class Comment {
         this.comment = comment;
     }
 
-    public User getUser() {
-        return user;
+    public Student getStudent() {
+        return student;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setStudent(Student student) {
+        this.student = student;
     }
 
     public Subject getSubject() {
@@ -155,8 +155,8 @@ public class Comment {
         if (this.visible && this.getSuperComment() == null) {
 
             Subject subjectClone = getSubjectClone();
-            User userCopy = getUserClone();
-            commentClone = new Comment(subjectClone, userCopy, this.getComment());
+            Student studentCopy = getStudentClone();
+            commentClone = new Comment(subjectClone, studentCopy, this.getComment());
             getSuperCommentClone(commentClone);
             commentClone.setSubcomments(this.subcommentsClone());
 
@@ -167,7 +167,7 @@ public class Comment {
 
     private void getSuperCommentClone(Comment commentClone) {
         if (this.getSuperComment() != null && !this.getSuperComment().isNIL()) {
-            Comment superCommentClone = new Comment(this.superComment.getSubject(), this.superComment.getUser(),
+            Comment superCommentClone = new Comment(this.superComment.getSubject(), this.superComment.getStudent(),
                     this.superComment.getComment());
             commentClone.setSuperComment(superCommentClone);
         } else
@@ -186,23 +186,23 @@ public class Comment {
     }
 
     @Nullable
-    private User getUserClone() {
-        User userCopy;
-        if (this.user != null && !this.user.isNIL()) {
-            userCopy = new User(this.getUser().getEmail(), this.getUser().getFirstName(),
-                    this.getUser().getSecondName(), this.getUser().getPassword());
+    private Student getStudentClone() {
+        Student studentCopy;
+        if (this.student != null && !this.student.isNIL()) {
+            studentCopy = new Student(this.getStudent().getEmail(), this.getStudent().getFirstName(),
+                    this.getStudent().getSecondName(), this.getStudent().getPassword());
         } else {
-            userCopy = null;
+            studentCopy = null;
         }
-        return userCopy;
+        return studentCopy;
     }
 
     private List<Comment> subcommentsClone() {
         List<Comment> subcomments = new ArrayList<>();
         for (Comment sc : this.getSubcomments()) {
             Subject subjectClone = new Subject(sc.getSubject().getId(), sc.getSubject().getName());
-            User userClone = sc.getUser().superficialCopy();
-            Comment subcommentClone = new Comment(subjectClone, userClone, sc.getComment());
+            Student studentClone = sc.getStudent().superficialCopy();
+            Comment subcommentClone = new Comment(subjectClone, studentClone, sc.getComment());
             subcomments.add(subcommentClone);
         }
         return subcomments;

@@ -1,9 +1,9 @@
 package com.ufcg.cc.psoft.ucdb.service;
 
 import com.ufcg.cc.psoft.exceptions.InvalidLoginException;
-import com.ufcg.cc.psoft.exceptions.NotCorrespondingUserLogin;
-import com.ufcg.cc.psoft.ucdb.model.User;
-import com.ufcg.cc.psoft.ucdb.view.UserView;
+import com.ufcg.cc.psoft.exceptions.NotCorrespondingStudentLogin;
+import com.ufcg.cc.psoft.ucdb.model.Student;
+import com.ufcg.cc.psoft.ucdb.view.StudentView;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.jetbrains.annotations.NotNull;
@@ -23,25 +23,25 @@ public class LoginService {
     private final String TOKEN_KEY = "HAPPY_TOMATO";
 
     @Autowired
-    private UserService userService;
+    private StudentService studentService;
 
     @NotNull
-    public ResponseEntity<LoginResponse> getLoginResponseEntity(@RequestBody User requestUser)
-            throws NotCorrespondingUserLogin {
-        String email = requestUser.getEmail();
-        String password= requestUser.getPassword();
+    public ResponseEntity<LoginResponse> getLoginResponseEntity(@RequestBody Student requestStudent)
+            throws NotCorrespondingStudentLogin {
+        String email = requestStudent.getEmail();
+        String password= requestStudent.getPassword();
 
         if (isInvalidValue(email) || isInvalidValue(password)) {
             throw new InvalidLoginException("Os valores passados na autentificação não correspondem a nenhum " +
                     "dos usuarios do banco de dados");
         }
 
-        UserView registeredUser = userService.findByLogin(email,  password);
-        if(registeredUser == null)
-            throw  new NotCorrespondingUserLogin("User not found");
+        StudentView registeredStudent = studentService.findByLogin(email,  password);
+        if(registeredStudent == null)
+            throw  new NotCorrespondingStudentLogin("Student not found");
 
-        String userToken = getToken(registeredUser.getEmail());
-        return new ResponseEntity<>(new LoginResponse(userToken), HttpStatus.OK);
+        String studentToken = getToken(registeredStudent.getEmail());
+        return new ResponseEntity<>(new LoginResponse(studentToken), HttpStatus.OK);
     }
 
     /**
@@ -55,12 +55,12 @@ public class LoginService {
 
     /**
      * Converts a user representation on a authorization token
-     * @param userRepresentationToToken : toString of user concat with toString of current date
+     * @param studentRepresentationToToken : toString of user concat with toString of current date
      * @return : a token authorization
      */
-    private String getToken(String userRepresentationToToken) {
+    private String getToken(String studentRepresentationToToken) {
         return  Jwts.builder().
-                setSubject(userRepresentationToToken).
+                setSubject(studentRepresentationToToken).
                 signWith(SignatureAlgorithm.HS512, TOKEN_KEY).
                 setExpiration(new Date(System.currentTimeMillis() + 30 * 60 * 1000)).
                 compact();
@@ -71,7 +71,7 @@ public class LoginService {
      * Simple object representing the login response
      */
     public class LoginResponse {
-        /** User authorized token*/
+        /** Student authorized token*/
         public String token;
 
         public LoginResponse(String token) {

@@ -1,48 +1,47 @@
 package com.ufcg.cc.psoft.ucdb.service;
 
 
-import com.ufcg.cc.psoft.ucdb.dao.UserDAO;
+import com.ufcg.cc.psoft.ucdb.dao.StudentDAO;
+import com.ufcg.cc.psoft.ucdb.model.Student;
 import com.ufcg.cc.psoft.ucdb.model.Subject;
-import com.ufcg.cc.psoft.ucdb.model.User;
-import com.ufcg.cc.psoft.ucdb.view.UserView;
+import com.ufcg.cc.psoft.ucdb.view.StudentView;
 import com.ufcg.cc.psoft.util.Util;
-import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService {
+public class StudentService {
 
-    private final UserDAO userDAO;
+    private final StudentDAO studentDAO;
 
 
     private final Util util;
 
-    public UserService(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public StudentService(StudentDAO studentDAO) {
+        this.studentDAO = studentDAO;
         this.util = new Util();
     }
 
-    public UserView create(User user) {
-        String email = user.getEmail();
-        if (this.userDAO.userFindByEmail(email) != null){
+    public StudentView create(Student student) {
+        String email = student.getEmail();
+        if (this.studentDAO.studentFindByEmail(email) != null){
             return null;
         } else {
-            User copy = userDAO.save(user);
-            return new UserView(copy.getEmail(),copy.getFirstName(),copy.getSecondName());
+            Student copy = studentDAO.save(student);
+            return new StudentView(copy.getEmail(),copy.getFirstName(),copy.getSecondName());
         }
 
     }
 
-    public UserView findByLogin(String email, String password) {
-        User copy = userDAO.findByLogin(email,password);
-        return new UserView(copy.getEmail(),copy.getFirstName(),copy.getSecondName());
+    public StudentView findByLogin(String email, String password) {
+        Student copy = studentDAO.findByLogin(email,password);
+        return new StudentView(copy.getEmail(),copy.getFirstName(),copy.getSecondName());
     }
 
     public Boolean enjoyed(String token, long subjectID) {
         boolean answer = false;
         if (subjectID != 0) {
-            final User user = this.util.getUser(token, this.userDAO);
-            for (Subject s : user.getEnjoiyed()) {
+            final Student student = this.util.getStudent(token, this.studentDAO);
+            for (Subject s : student.getEnjoiyed()) {
                 if (s.getId() == subjectID) {
                     answer = true;
                     break;
@@ -58,8 +57,8 @@ public class UserService {
     public Boolean disliked(String token, long subjectID) {
         boolean answer = false;
         if (subjectID != 0) {
-            final User user = this.util.getUser(token, this.userDAO);
-            for (Subject s : user.getDisliked()) {
+            final Student student = this.util.getStudent(token, this.studentDAO);
+            for (Subject s : student.getDisliked()) {
                 if (s.getId() == subjectID) {
                     answer = true;
                     break;

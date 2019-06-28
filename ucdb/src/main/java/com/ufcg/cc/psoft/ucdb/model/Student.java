@@ -8,9 +8,9 @@ import java.util.Objects;
 import java.util.Set;
 
 @Data
-@Entity(name = "User")
-@Table(name = "user")
-public class User {
+@Entity(name = "Student")
+@Table(name = "student")
+public class Student {
 
     @Id
     private String email;
@@ -21,7 +21,7 @@ public class User {
     @ManyToMany
     @JoinTable(
             name="liked_course",
-            joinColumns = @JoinColumn(name = "user_email"),
+            joinColumns = @JoinColumn(name = "student_email"),
             inverseJoinColumns = @JoinColumn(name = "subject_id")
     )
     private Set<Subject> enjoiyed;
@@ -29,28 +29,28 @@ public class User {
     @ManyToMany
     @JoinTable(
             name="disliked_course",
-            joinColumns = @JoinColumn(name = "user_email"),
+            joinColumns = @JoinColumn(name = "student_email"),
             inverseJoinColumns = @JoinColumn(name = "subject_id")
     )
     private Set<Subject> disliked;
 
 
     @OneToMany(
-            mappedBy = "user",
+            mappedBy = "student",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private Set<Comment> userComments;
+    private Set<Comment> studentComments;
 
 
-    public User() {
+    public Student() {
         this.enjoiyed = new HashSet<>();
         this.disliked = new HashSet<>();
-        this.userComments = new HashSet<>();
+        this.studentComments = new HashSet<>();
     }
 
 
-    public User(String email, String firstName, String secondName, String password) {
+    public Student(String email, String firstName, String secondName, String password) {
         this();
         this.email = email;
         this.firstName = firstName;
@@ -96,8 +96,8 @@ public class User {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return email.equals(user.email);
+        Student student = (Student) o;
+        return email.equals(student.email);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "Student{" +
                 "email='" + email + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", secondName='" + secondName + '\'' +
@@ -131,8 +131,8 @@ public class User {
         this.disliked = disliked;
     }
 
-    public User superficialCopy() {
-        return new User(this.getEmail(), this.getFirstName(), this.getSecondName(), this.getPassword());
+    public Student superficialCopy() {
+        return new Student(this.getEmail(), this.getFirstName(), this.getSecondName(), this.getPassword());
     }
 
     public boolean isNIL() {

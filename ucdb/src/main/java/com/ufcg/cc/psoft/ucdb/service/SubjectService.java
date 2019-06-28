@@ -2,10 +2,10 @@ package com.ufcg.cc.psoft.ucdb.service;
 
 
 import com.ufcg.cc.psoft.ucdb.dao.SubjectDAO;
-import com.ufcg.cc.psoft.ucdb.dao.UserDAO;
+import com.ufcg.cc.psoft.ucdb.dao.StudentDAO;
 import com.ufcg.cc.psoft.ucdb.model.Comment;
 import com.ufcg.cc.psoft.ucdb.model.Subject;
-import com.ufcg.cc.psoft.ucdb.model.User;
+import com.ufcg.cc.psoft.ucdb.model.Student;
 import com.ufcg.cc.psoft.ucdb.view.CommentView;
 import com.ufcg.cc.psoft.ucdb.view.GenericSubjectProfile;
 import com.ufcg.cc.psoft.ucdb.view.SubjectProfile;
@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -34,13 +33,13 @@ public class SubjectService {
     private final SubjectDAO subjectDAO;
 
     @Autowired
-    private final UserDAO userDAO;
+    private final StudentDAO studentDAO;
 
     private final Util util;
 
-    public SubjectService(SubjectDAO subjectDAO, UserDAO userDAO) {
+    public SubjectService(SubjectDAO subjectDAO, StudentDAO studentDAO) {
         this.subjectDAO = subjectDAO;
-        this.userDAO = userDAO;
+        this.studentDAO = studentDAO;
         this.util = new Util();
     }
 
@@ -134,62 +133,62 @@ public class SubjectService {
     public void deleteAll() { subjectDAO.deleteAll();}
 
     public void like(String token, long id) {
-        User user = this.util.getUser(token, userDAO);
+        Student student = this.util.getStudent(token, studentDAO);
         Subject subject = this.subjectDAO.findById(id);
 
 
-        user.getEnjoiyed().add(subject);
-        subject.getUserLiked().add(user);
-        undislike(user, subject);
-        updateDataBase(user, subject);
+        student.getEnjoiyed().add(subject);
+        subject.getStudentLiked().add(student);
+        undislike(student, subject);
+        updateDataBase(student, subject);
 
     }
 
     public void dislike(String token, long id) {
-        User user = this.util.getUser(token, userDAO);
+        Student student = this.util.getStudent(token, studentDAO);
         Subject subject = this.subjectDAO.findById(id);
 
 
-        subject.getUserDisliked().add(user);
-        user.getDisliked().add(subject);
+        subject.getStudentDisliked().add(student);
+        student.getDisliked().add(subject);
 
-        unlike(user, subject);
+        unlike(student, subject);
 
-        updateDataBase(user, subject);
+        updateDataBase(student, subject);
 
     }
 
     public void unlike(String token, long id) {
-        User user = this.util.getUser(token, userDAO);
+        Student student = this.util.getStudent(token, studentDAO);
         Subject subject = this.subjectDAO.findById(id);
 
-        unlike(user, subject);
+        unlike(student, subject);
 
-        updateDataBase(user, subject);
+        updateDataBase(student, subject);
     }
 
 
 
     public void undislike(String token, long id) {
-        User user = this.util.getUser(token, userDAO);
+        Student student = this.util.getStudent(token, studentDAO);
         Subject subject = this.subjectDAO.findById(id);
 
-        undislike(user, subject);
-        updateDataBase(user, subject);
+        undislike(student, subject);
+        updateDataBase(student, subject);
     }
 
-    private void undislike(User user, Subject subject) {
-        subject.getUserDisliked().remove(user);
-        user.getDisliked().remove(subject);
+    private void undislike(Student student, Subject subject) {
+        subject.getStudentDisliked().remove(student);
+        student.getDisliked().remove(subject);
     }
 
-    private void unlike(User user, Subject subject) {
-        subject.getUserLiked().remove(user);
-        user.getEnjoiyed().remove(subject);
+    private void unlike(Student student, Subject subject) {
+        subject.getStudentLiked().remove(student);
+        student.getEnjoiyed().remove(subject);
     }
 
-    private void updateDataBase(User user, Subject subject) {
-        userDAO.save(user); // update user
+    private void updateDataBase(Student student, Subject subject) {
+        studentDAO.save(student); // update student
         subjectDAO.save(subject);
     }
 
@@ -204,8 +203,8 @@ public class SubjectService {
     private SubjectProfile getSubjectProfile(Subject superficialClone) {
         final long cloneId = superficialClone.getId();
         final String cloneName = superficialClone.getName();
-        final int cloneDislikes = superficialClone.getUserLiked().size();
-        final int cloneLikes = superficialClone.getUserDisliked().size();
+        final int cloneDislikes = superficialClone.getStudentLiked().size();
+        final int cloneLikes = superficialClone.getStudentDisliked().size();
 //        final double cloneAverage = superficialClone.getAverage();
 
         final List<Comment> subjectComments = superficialClone.getSubjectComments();
@@ -221,7 +220,7 @@ public class SubjectService {
 
     private Collection<CommentView> setViewComments(Collection<Comment> subjectComments) {
         return subjectComments.stream()
-                .map(c -> new CommentView(c.getUser().getFirstName(), c.getUser().getSecondName(), c.getComment(),
+                .map(c -> new CommentView(c.getStudent().getFirstName(), c.getStudent().getSecondName(), c.getComment(),
                         setViewComments(c.getSubcomments()))).collect(Collectors.toList());
     }
 

@@ -40,8 +40,8 @@ public class CommentController {
     }
 
     @DeleteMapping(value = "/{id}") /*o id eh uma string composta no formato subjectID_UserEmail */
-    public ResponseEntity delete(@PathVariable String id) {
-        this.commentService.deleteComment(id.split("_")[1], id.split("_")[0]);
+    public ResponseEntity delete(@RequestHeader ("Authorization") String token, @PathVariable long id) {
+        this.commentService.deleteComment(token.substring(7), id);
         return new ResponseEntity(HttpStatus.OK);
     }
 }

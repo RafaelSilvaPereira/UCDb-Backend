@@ -2,10 +2,10 @@ package com.ufcg.cc.psoft.ucdb.service;
 
 import com.ufcg.cc.psoft.ucdb.dao.CommentDAO;
 import com.ufcg.cc.psoft.ucdb.dao.SubjectDAO;
-import com.ufcg.cc.psoft.ucdb.dao.UserDAO;
+import com.ufcg.cc.psoft.ucdb.dao.StudentDAO;
 import com.ufcg.cc.psoft.ucdb.model.Comment;
+import com.ufcg.cc.psoft.ucdb.model.Student;
 import com.ufcg.cc.psoft.ucdb.model.Subject;
-import com.ufcg.cc.psoft.ucdb.model.User;
 import com.ufcg.cc.psoft.util.Util;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,53 +18,53 @@ public class CommentService {
     private final CommentDAO commentDAO;
 
     @Autowired
-    private final UserDAO userDAO;
+    private final StudentDAO studentDAO;
 
     @Autowired
     private final SubjectDAO subjectDAO;
 
     private final Util util;
 
-    public CommentService(CommentDAO commentDAO, UserDAO userDAO, SubjectDAO subjectDAO) {
+    public CommentService(CommentDAO commentDAO, StudentDAO studentDAO, SubjectDAO subjectDAO) {
         this.commentDAO = commentDAO;
-        this.userDAO = userDAO;
+        this.studentDAO = studentDAO;
         this.subjectDAO = subjectDAO;
         this.util = new Util();
     }
 
     public void commentSubject(String token, long id, JSONObject request) {
-        User user = this.util.getUser(token, userDAO);
+        Student student = this.util.getStudent(token, studentDAO);
         Subject subject = this.subjectDAO.findById(id);
         String comment = (String) request.get("comment");
 
-        if (user != null && subject != null && comment != null && !"".equals(comment.trim())) {
-            final Comment toSaveComment = new Comment(subject, user, comment);
+        if (student != null && subject != null && comment != null && !"".equals(comment.trim())) {
+            final Comment toSaveComment = new Comment(subject, student, comment);
             this.commentDAO.save(toSaveComment);
         }
     }
 
     /* a gente apagou o clone */
-    public void addSubcommentToSubject(String userToken, long commentId, long idSubject, JSONObject request) {
+    public void addSubcommentToSubject(String studentToken, long commentId, long idSubject, JSONObject request) {
 
 
         Comment comment = this.commentDAO.findById(commentId);
 
-        User superCommentUser = this.commentDAO.findById(commentId).getUser();
+        Student superCommentStudent = this.commentDAO.findById(commentId).getStudent();
         Subject superCommentSubject = this.subjectDAO.findById(idSubject);
 
         /* a subCommentSubject deve ser a mesma já que subcomment simula a resposta a um comentario */
         String txtComment = (String) request.get("comment");
-        User subCommentUser= this.util.getUser(userToken, userDAO);
+        Student subCommentStudent = this.util.getStudent(studentToken, studentDAO);
 
 
-        if (superCommentUser != null && superCommentSubject != null && subCommentUser != null
+        if (superCommentStudent != null && superCommentSubject != null && subCommentStudent != null
                 && txtComment != null && !"".equals(txtComment.trim())) {
 
 
 
 
 
-            Comment subComment = new Comment(superCommentSubject, subCommentUser, txtComment, comment);
+            Comment subComment = new Comment(superCommentSubject, subCommentStudent, txtComment, comment);
 
             comment.getSubcomments().add(subComment);
             this.commentDAO.save(subComment);
@@ -72,11 +72,12 @@ public class CommentService {
         }
     }
 
-    public void deleteComment(String subjectId, String userEmail) {
-        Long subjectIdLong = Long.parseLong(subjectId);
-        final Comment comment = this.commentDAO.findByUserEmailAndSubjectId(subjectIdLong, userEmail);
-        comment.setVisible(false);
-        this.commentDAO.save(comment);
+    public void deleteComment(String token, long id) {
+        Student student = this.util.getStudent(token, studentDAO);
+        final Comment comment = this.commentDAO.findById(id);
+        if (comment.getStudent().getEmail() == student.getEmail()) {
+            comment.setVisible(false);
+            this.commentDAO.save(comment);
+        }
     }
-
 }

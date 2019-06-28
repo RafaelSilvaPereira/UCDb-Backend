@@ -33,10 +33,6 @@ public class SubjectProfile extends GenericSubjectProfile {
         return comments;
     }
 
-//    public Double getSubjectAverage() {
-//        return subjectAverage;
-//    }
-
     public int getProportion() {
         int answer = 0;
         if (this.getLikes() + this.getDislikes() == 0) {
@@ -46,18 +42,5 @@ public class SubjectProfile extends GenericSubjectProfile {
         }
         return answer;
     }
-
-//    private Double calculeSubjectAvarege(Set<UserEvalueSubject> usersEvaluation) {
-//        double sum = 0;
-//        int size = 0;
-//        for (UserEvalueSubject userEvalueSubject : usersEvaluation) {
-//            sum += userEvalueSubject.getEvaluation();
-//            size++;
-//        }
-//
-//        Double avg = (size == 0) ? 0 : (sum / size);
-//
-//        return Double.parseDouble(String.format("%.2f", avg).replace(",", "."));
-//    }
 
 }

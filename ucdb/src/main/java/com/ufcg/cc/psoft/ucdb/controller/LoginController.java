@@ -1,8 +1,8 @@
 package com.ufcg.cc.psoft.ucdb.controller;
 
 import com.ufcg.cc.psoft.exceptions.InvalidLoginException;
-import com.ufcg.cc.psoft.exceptions.NotCorrespondingUserLogin;
-import com.ufcg.cc.psoft.ucdb.model.User;
+import com.ufcg.cc.psoft.exceptions.NotCorrespondingStudentLogin;
+import com.ufcg.cc.psoft.ucdb.model.Student;
 import com.ufcg.cc.psoft.ucdb.service.LoginService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
@@ -25,17 +25,17 @@ public class LoginController {
 
     /**
      * From a user is generated an authorization token, if the user of the request is a user already registered.
-     * @param requestUser : is a user created for the post method.
+     * @param requestStudent : is a user created for the post method.
      * @return :  an authorization token for the user.
-     * @throws NotCorrespondingUserLogin : if the request user does not correspond to a user registered in the database.
+     * @throws NotCorrespondingStudentLogin : if the request user does not correspond to a user registered in the database.
      * @throws InvalidLoginException : if one of the parameters (email or password) is passed with an invalid value
      *  (null, or invalid string).
      */
     @PostMapping("/")
     @ResponseBody
-    public @NotNull ResponseEntity<LoginService.LoginResponse> authenticate(@RequestBody User requestUser) throws NotCorrespondingUserLogin,
+    public @NotNull ResponseEntity<LoginService.LoginResponse> authenticate(@RequestBody Student requestStudent) throws NotCorrespondingStudentLogin,
             InvalidLoginException {
-        return this.loginService.getLoginResponseEntity(requestUser);
+        return this.loginService.getLoginResponseEntity(requestStudent);
     }
 
 }
