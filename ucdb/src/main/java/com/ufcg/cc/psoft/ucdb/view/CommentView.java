@@ -68,6 +68,14 @@ public class CommentView {
         this.subcomments = subcomments;
     }
 
+    public String getCommentDate() {
+        return commentDate;
+    }
+
+    public void setCommentDate(String commentDate) {
+        this.commentDate = commentDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

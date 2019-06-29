@@ -169,7 +169,9 @@ public class Comment {
 
             Subject subjectClone = getSubjectClone();
             Student studentCopy = getStudentClone();
+            String dateCopy = this.getDate();
             commentClone = new Comment(subjectClone, studentCopy, this.getComment());
+            commentClone.setDate(dateCopy);
             getSuperCommentClone(commentClone);
             commentClone.setSubcomments(this.subcommentsClone());
 
@@ -215,7 +217,9 @@ public class Comment {
         for (Comment sc : this.getSubcomments()) {
             Subject subjectClone = new Subject(sc.getSubject().getId(), sc.getSubject().getName());
             Student studentClone = sc.getStudent().superficialCopy();
+            String dateCopy = sc.getDate();
             Comment subcommentClone = new Comment(subjectClone, studentClone, sc.getComment());
+            subcommentClone.setDate(dateCopy);
             subcomments.add(subcommentClone);
         }
         return subcomments;
