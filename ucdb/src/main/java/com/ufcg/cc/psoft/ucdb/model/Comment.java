@@ -3,10 +3,8 @@ package com.ufcg.cc.psoft.ucdb.model;
 import org.jetbrains.annotations.Nullable;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 @Entity
@@ -20,6 +18,9 @@ public class Comment {
     @Column(name = "subjectComment") /* definindo o texto*/
     private String comment;
 
+    @Column(name = "postDate")
+    private String date;
+
     @Column(name = "visible")
     private Boolean visible;
 
@@ -28,8 +29,6 @@ public class Comment {
 
     @OneToMany(mappedBy = "superComment") /*definindo o auto relacionamento*/
     private List<Comment> subcomments;
-
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Student student;
@@ -42,6 +41,11 @@ public class Comment {
         this.superComment = null;
         this.subcomments = new ArrayList<>();
         this.visible = true;
+        final Date date = new Date();
+        String commentDate = new SimpleDateFormat("dd/MM/yyyy").format(date);
+        String commentHour = new SimpleDateFormat("HH:mm:ss").format(date);
+        this.date = String.format("at: %s on day: %s", commentHour, commentDate);
+
     }
 
     public Comment(Subject subject, Student student, String comment) {
@@ -116,6 +120,14 @@ public class Comment {
 
     public Boolean getVisible() {
         return visible;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     @Override

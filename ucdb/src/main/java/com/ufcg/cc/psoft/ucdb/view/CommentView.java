@@ -12,12 +12,16 @@ public class CommentView {
     private String comment;
     private Collection<CommentView> subcomments; /*CommentView vai gerar uma lista de comentarios que são comments view*/
     private long commentID;
+    private String commentDate;
 
-    public CommentView(String studentName, String studentSecondName, String comment, Collection<CommentView> subcomments, long id) {
+    public CommentView(String studentName, String studentSecondName, String comment, Collection<CommentView> subcomments
+            , long commentID, String commentDate) {
         this.studentName = studentName;
         this.studentSecondName = studentSecondName;
         this.comment = comment;
         this.subcomments = subcomments;
+        this.commentID = commentID;
+        this.commentDate = commentDate;
     }
 
     public void setSubcomments(Collection<CommentView> subcomments) {

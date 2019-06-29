@@ -218,9 +218,18 @@ public class SubjectService {
     }
 
     private Collection<CommentView> setViewComments(Collection<Comment> subjectComments) {
-        return subjectComments.stream()
-                .map(c -> new CommentView(c.getStudent().getFirstName(), c.getStudent().getSecondName(), c.getComment(),
-                        setViewComments(c.getSubcomments()), c.getId())).collect(Collectors.toList());
+        List<CommentView> list = new ArrayList<>();
+        for (Comment c : subjectComments) {
+            CommentView commentView = new CommentView(c.getStudent().getFirstName(),
+                    c.getStudent().getSecondName(),
+                    c.getComment(),
+                    setViewComments(c.getSubcomments()),
+                    c.getId(),
+                    c.getDate()
+            );
+            list.add(commentView);
+        }
+        return list;
     }
 
 }
