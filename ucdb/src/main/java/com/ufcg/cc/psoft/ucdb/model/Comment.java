@@ -146,6 +146,7 @@ public class Comment {
         return toString;
     }
 
+
     public boolean isNIL() {
         return this.getId() == 0;
     }

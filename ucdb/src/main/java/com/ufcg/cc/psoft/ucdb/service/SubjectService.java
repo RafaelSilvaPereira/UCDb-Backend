@@ -1,11 +1,11 @@
 package com.ufcg.cc.psoft.ucdb.service;
 
 
-import com.ufcg.cc.psoft.ucdb.dao.SubjectDAO;
 import com.ufcg.cc.psoft.ucdb.dao.StudentDAO;
+import com.ufcg.cc.psoft.ucdb.dao.SubjectDAO;
 import com.ufcg.cc.psoft.ucdb.model.Comment;
-import com.ufcg.cc.psoft.ucdb.model.Subject;
 import com.ufcg.cc.psoft.ucdb.model.Student;
+import com.ufcg.cc.psoft.ucdb.model.Subject;
 import com.ufcg.cc.psoft.ucdb.view.CommentView;
 import com.ufcg.cc.psoft.ucdb.view.GenericSubjectProfile;
 import com.ufcg.cc.psoft.ucdb.view.SubjectProfile;
@@ -92,7 +92,7 @@ public class SubjectService {
 
     private List sortByProportion(List<SubjectProfile> list) {
 
-        Stream<@NotNull SubjectProfile> sorted = list.stream().sorted(((SubjectProfile o1, SubjectProfile o2) -> o2.getProportion() - o1.getProportion()));
+        Stream<@NotNull SubjectProfile> sorted = list.stream().sorted(((SubjectProfile o1, SubjectProfile o2) -> (int) (o2.getProportion() - o1.getProportion())));
         List<@NotNull SubjectProfile> profiles = sorted.collect(Collectors.toList());
         return profiles;
     }
@@ -205,7 +205,6 @@ public class SubjectService {
         final String cloneName = superficialClone.getName();
         final int cloneDislikes = superficialClone.getStudentLiked().size();
         final int cloneLikes = superficialClone.getStudentDisliked().size();
-//        final double cloneAverage = superficialClone.getAverage();
 
         final List<Comment> subjectComments = superficialClone.getSubjectComments();
         return new SubjectProfile(cloneId, cloneName, cloneLikes, cloneDislikes,
@@ -221,7 +220,7 @@ public class SubjectService {
     private Collection<CommentView> setViewComments(Collection<Comment> subjectComments) {
         return subjectComments.stream()
                 .map(c -> new CommentView(c.getStudent().getFirstName(), c.getStudent().getSecondName(), c.getComment(),
-                        setViewComments(c.getSubcomments()))).collect(Collectors.toList());
+                        setViewComments(c.getSubcomments()), c.getId())).collect(Collectors.toList());
     }
 
 }

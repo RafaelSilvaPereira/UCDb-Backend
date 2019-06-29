@@ -33,12 +33,12 @@ public class SubjectProfile extends GenericSubjectProfile {
         return comments;
     }
 
-    public int getProportion() {
-        int answer = 0;
+    public double getProportion() {
+        double answer = 0;
         if (this.getLikes() + this.getDislikes() == 0) {
             answer = 0;
         } else {
-            answer = this.getLikes() / (this.getLikes() + this.getDislikes());
+            answer = (this.getLikes() * 1.0) / (this.getLikes() + this.getDislikes());
         }
         return answer;
     }

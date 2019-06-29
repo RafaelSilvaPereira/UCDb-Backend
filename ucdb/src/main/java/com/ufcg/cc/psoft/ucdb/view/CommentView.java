@@ -11,12 +11,25 @@ public class CommentView {
     private String studentSecondName;
     private String comment;
     private Collection<CommentView> subcomments; /*CommentView vai gerar uma lista de comentarios que são comments view*/
+    private long commentID;
 
-    public CommentView(String studentName, String studentSecondName, String comment, Collection<CommentView> subcomments) {
+    public CommentView(String studentName, String studentSecondName, String comment, Collection<CommentView> subcomments, long id) {
         this.studentName = studentName;
         this.studentSecondName = studentSecondName;
         this.comment = comment;
         this.subcomments = subcomments;
+    }
+
+    public void setSubcomments(Collection<CommentView> subcomments) {
+        this.subcomments = subcomments;
+    }
+
+    public long getCommentID() {
+        return commentID;
+    }
+
+    public void setCommentID(long commentID) {
+        this.commentID = commentID;
     }
 
     public String getStudentName() {
