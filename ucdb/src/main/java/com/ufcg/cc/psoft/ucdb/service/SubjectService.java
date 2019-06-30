@@ -132,7 +132,7 @@ public class SubjectService {
         });
     }
 
-    public void deleteAll() { subjectDAO.deleteAll();}
+//    public void deleteAll() { subjectDAO.deleteAll();}
 
     public void like(String token, long id) {
         Student student = this.util.getStudent(token, studentDAO);
@@ -222,15 +222,17 @@ public class SubjectService {
     private Collection<CommentView> setViewComments(Collection<Comment> subjectComments) {
         List<CommentView> list = new ArrayList<>();
         for (Comment c : subjectComments) {
-            CommentView commentView = new CommentView(c.getStudent().getFirstName(),
-                    c.getStudent().getSecondName(),
-                    c.getComment(),
-                    setViewComments(c.getSubcomments()),
-                    c.getId(),
-                    c.getDate(),
-                    c.getHour()
-            );
-            list.add(commentView);
+            if (c.isVisble()) {
+                CommentView commentView = new CommentView(c.getStudent().getFirstName(),
+                        c.getStudent().getSecondName(),
+                        c.getComment(),
+                        setViewComments(c.getSubcomments()),
+                        c.getId(),
+                        c.getDate(),
+                        c.getHour()
+                );
+                list.add(commentView);
+            }
         }
         return list;
     }

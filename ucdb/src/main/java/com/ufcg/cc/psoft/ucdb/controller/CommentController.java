@@ -52,7 +52,7 @@ public class CommentController {
     }
 
     @ApiOperation(value = "Deleta um comentario, passado o id do mesmo")
-    @DeleteMapping(value = "/{id}") /*o id eh uma string composta no formato subjectID_UserEmail */
+    @DeleteMapping(value = "/{id}") /*o id do comentario*/
     public ResponseEntity delete(@RequestHeader ("Authorization") String token, @PathVariable long id) {
         this.commentService.deleteComment(token.substring(7), id);
         return new ResponseEntity(HttpStatus.OK);

@@ -83,7 +83,7 @@ public class CommentService {
     public void deleteComment(String token, long id) {
         Student student = this.util.getStudent(token, studentDAO);
         final Comment comment = this.commentDAO.findById(id);
-        if (comment.getStudent().getEmail() == student.getEmail()) {
+        if (comment.getStudent().getEmail().equals(student.getEmail())) {
             comment.setVisible(false);
             this.commentDAO.save(comment);
         }
