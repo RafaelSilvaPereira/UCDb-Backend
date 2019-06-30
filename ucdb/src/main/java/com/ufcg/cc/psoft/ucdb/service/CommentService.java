@@ -6,11 +6,13 @@ import com.ufcg.cc.psoft.ucdb.dao.SubjectDAO;
 import com.ufcg.cc.psoft.ucdb.model.Comment;
 import com.ufcg.cc.psoft.ucdb.model.Student;
 import com.ufcg.cc.psoft.ucdb.model.Subject;
+import com.ufcg.cc.psoft.ucdb.view.CommentView;
 import com.ufcg.cc.psoft.util.Util;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -34,7 +36,8 @@ public class CommentService {
         this.util = new Util();
     }
 
-    public void commentSubject(String token, long id, JSONObject request) {
+    public CommentView commentSubject(String token, long id, JSONObject request) {
+        CommentView response = null;
         Student student = this.util.getStudent(token, studentDAO);
         Subject subject = this.subjectDAO.findById(id);
         String comment = (String) request.get("comment");
@@ -42,12 +45,15 @@ public class CommentService {
         if (student != null && subject != null && comment != null && !"".equals(comment.trim())) {
             final Comment toSaveComment = new Comment(subject, student, comment);
             this.commentDAO.save(toSaveComment);
+            response = new CommentView(student.getFirstName(), student.getSecondName(), comment, new ArrayList<>(),
+                    toSaveComment.getId(), toSaveComment.getDate(), toSaveComment.getHour());
         }
+        return response;
     }
 
     /* a gente apagou o clone */
-    public void addSubcommentToSubject(String studentToken, long commentId, long idSubject, JSONObject request) {
-
+    public CommentView addSubcommentToSubject(String studentToken, long commentId, long idSubject, JSONObject request) {
+        CommentView response = null;
 
         Comment comment = this.commentDAO.findById(commentId);
 
@@ -62,16 +68,16 @@ public class CommentService {
         if (superCommentStudent != null && superCommentSubject != null && subCommentStudent != null
                 && txtComment != null && !"".equals(txtComment.trim())) {
 
-
-
-
-
             Comment subComment = new Comment(superCommentSubject, subCommentStudent, txtComment, comment);
-
             comment.getSubcomments().add(subComment);
             this.commentDAO.save(subComment);
             this.commentDAO.save(comment);
+
+            response = new CommentView(subCommentStudent.getFirstName(), subCommentStudent.getSecondName(), txtComment, new ArrayList<>(),
+                    subComment.getId(), subComment.getDate(), subComment.getHour());
         }
+
+        return response;
     }
 
     public void deleteComment(String token, long id) {

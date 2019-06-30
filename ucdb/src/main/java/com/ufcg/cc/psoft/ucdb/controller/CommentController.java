@@ -1,6 +1,7 @@
 package com.ufcg.cc.psoft.ucdb.controller;
 
 import com.ufcg.cc.psoft.ucdb.service.CommentService;
+import com.ufcg.cc.psoft.ucdb.view.CommentView;
 import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +21,13 @@ public class CommentController {
     /**
      * Sintaxe:
      * { "user":"email_user", "subject" : "subject_id", "comment" : "comentario"}
+     * @return
      */
     @PostMapping(value = "/create/{id}")
-    public void commentSubject(@RequestHeader ("Authorization") String token,  @PathVariable long id, @RequestBody JSONObject request) {
-        this.commentService.commentSubject(token.substring(7), id, request);
+    public ResponseEntity commentSubject(@RequestHeader("Authorization") String token, @PathVariable long id, @RequestBody JSONObject request) {
+        final CommentView commentView = this.commentService.commentSubject(token.substring(7), id, request);
+        System.out.println(commentView);
+        return new ResponseEntity<>(commentView, HttpStatus.OK);
     }
 
     /**
@@ -34,11 +38,12 @@ public class CommentController {
      * "subCommentUserEmail" : "email_do_usuario_do_comentario_filho"
      * "comment": "a resposta do comentario"
      * }
+     * @return
      */
     @PostMapping(value = "/reply/{idSubject}/{idComment}")
-    public void addSubcommentToSubject(@RequestHeader ("Authorization") String token, @PathVariable long  idSubject ,
-                                       @PathVariable long idComment, @RequestBody JSONObject request) {
-        this.commentService.addSubcommentToSubject(token.substring(7), idComment, idSubject,request);
+    public ResponseEntity<CommentView> addSubcommentToSubject(@RequestHeader("Authorization") String token, @PathVariable long idSubject,
+                                                              @PathVariable long idComment, @RequestBody JSONObject request) {
+        return new ResponseEntity<>(this.commentService.addSubcommentToSubject(token.substring(7), idComment, idSubject, request), HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}") /*o id eh uma string composta no formato subjectID_UserEmail */
