@@ -19,9 +19,9 @@ public class CommentController {
      * Sintaxe:
      * { "user":"email_user", "subject" : "subject_id", "comment" : "comentario"}
      */
-    @PostMapping(value = "/create")
-    public void commentSubject(@RequestBody JSONObject request) {
-        this.commentService.commentSubject(request);
+    @PostMapping(value = "/create/{id}")
+    public void commentSubject(@RequestHeader ("Authorization") String token,  @PathVariable long id, @RequestBody JSONObject request) {
+        this.commentService.commentSubject(token.substring(7), id, request);
     }
 
     /**
@@ -33,14 +33,15 @@ public class CommentController {
      * "comment": "a resposta do comentario"
      * }
      */
-    @PostMapping(value = "/reply")
-    public void addSubcommentToSubject(@RequestBody JSONObject request) {
-        this.commentService.addSubcommentToSubject(request);
+    @PostMapping(value = "/reply/{idSubject}/{idComment}")
+    public void addSubcommentToSubject(@RequestHeader ("Authorization") String token, @PathVariable long  idSubject ,
+                                       @PathVariable long idComment, @RequestBody JSONObject request) {
+        this.commentService.addSubcommentToSubject(token.substring(7), idComment, idSubject,request);
     }
 
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity delete(@PathVariable String id) {
-        this.commentService.deleteComment(id.split("_")[1], id.split("_")[0]);
+    @DeleteMapping(value = "/{id}") /*o id eh uma string composta no formato subjectID_UserEmail */
+    public ResponseEntity delete(@RequestHeader ("Authorization") String token, @PathVariable long id) {
+        this.commentService.deleteComment(token.substring(7), id);
         return new ResponseEntity(HttpStatus.OK);
     }
 }

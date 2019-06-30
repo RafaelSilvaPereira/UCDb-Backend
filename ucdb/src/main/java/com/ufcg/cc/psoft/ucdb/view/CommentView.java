@@ -1,38 +1,55 @@
 package com.ufcg.cc.psoft.ucdb.view;
 
-import com.ufcg.cc.psoft.ucdb.model.Comment;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 public class CommentView {
 
-    private String userName;
-    private String userSecondName;
+    private String studentName;
+    private String studentSecondName;
     private String comment;
-    private List<Comment> subcomments;
+    private Collection<CommentView> subcomments; /*CommentView vai gerar uma lista de comentarios que são comments view*/
+    private long commentID;
+    private String commentDate;
 
-    public CommentView(String userName, String userSecondName, String comment, List<Comment> subcomments) {
-        this.userName = userName;
-        this.userSecondName = userSecondName;
+    public CommentView(String studentName, String studentSecondName, String comment, Collection<CommentView> subcomments
+            , long commentID, String commentDate) {
+        this.studentName = studentName;
+        this.studentSecondName = studentSecondName;
         this.comment = comment;
+        this.subcomments = subcomments;
+        this.commentID = commentID;
+        this.commentDate = commentDate;
+    }
+
+    public void setSubcomments(Collection<CommentView> subcomments) {
         this.subcomments = subcomments;
     }
 
-    public String getUserName() {
-        return userName;
+    public long getCommentID() {
+        return commentID;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setCommentID(long commentID) {
+        this.commentID = commentID;
     }
 
-    public String getUserSecondName() {
-        return userSecondName;
+    public String getStudentName() {
+        return studentName;
     }
 
-    public void setUserSecondName(String userSecondName) {
-        this.userSecondName = userSecondName;
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
+    }
+
+    public String getStudentSecondName() {
+        return studentSecondName;
+    }
+
+    public void setStudentSecondName(String studentSecondName) {
+        this.studentSecondName = studentSecondName;
     }
 
     public String getComment() {
@@ -43,12 +60,20 @@ public class CommentView {
         this.comment = comment;
     }
 
-    public List<Comment> getSubcomments() {
+    public Collection<CommentView> getSubcomments() {
         return subcomments;
     }
 
-    public void setSubcomments(List<Comment> subcomments) {
+    public void setSubcomments(List<CommentView> subcomments) {
         this.subcomments = subcomments;
+    }
+
+    public String getCommentDate() {
+        return commentDate;
+    }
+
+    public void setCommentDate(String commentDate) {
+        this.commentDate = commentDate;
     }
 
     @Override
@@ -56,22 +81,22 @@ public class CommentView {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CommentView that = (CommentView) o;
-        return Objects.equals(userName, that.userName) &&
-                Objects.equals(userSecondName, that.userSecondName) &&
+        return Objects.equals(studentName, that.studentName) &&
+                Objects.equals(studentSecondName, that.studentSecondName) &&
                 Objects.equals(comment, that.comment) &&
                 Objects.equals(subcomments, that.subcomments);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userName, userSecondName, comment, subcomments);
+        return Objects.hash(studentName, studentSecondName, comment, subcomments);
     }
 
     @Override
     public String toString() {
         return "CommentView{" +
-                "userName='" + userName + '\'' +
-                ", userSecondName='" + userSecondName + '\'' +
+                "studentName='" + studentName + '\'' +
+                ", studentSecondName='" + studentSecondName + '\'' +
                 ", comment='" + comment +
                 '}';
     }

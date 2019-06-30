@@ -3,13 +3,13 @@ package com.ufcg.cc.psoft.ucdb.view;
 
 import java.util.Objects;
 
-public class UserView {
+public class StudentView {
 
     private String email;
     private String firstName;
     private String secondName;
 
-    public UserView(String email, String firstName, String secondName){
+    public StudentView(String email, String firstName, String secondName){
         this.email = email;
         this.firstName = firstName;
         this.secondName = secondName;
@@ -43,10 +43,10 @@ public class UserView {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserView userView = (UserView) o;
-        return Objects.equals(email, userView.email) &&
-                Objects.equals(firstName, userView.firstName) &&
-                Objects.equals(secondName, userView.secondName);
+        StudentView studentView = (StudentView) o;
+        return Objects.equals(email, studentView.email) &&
+                Objects.equals(firstName, studentView.firstName) &&
+                Objects.equals(secondName, studentView.secondName);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class UserView {
 
     @Override
     public String toString() {
-        return "UserView{" +
+        return "StudentView{" +
                 "email='" + email + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", secondName='" + secondName + '\'' +

@@ -1,4 +1,5 @@
 package com.ufcg.cc.psoft.ucdb.accessFilter;
+
 import io.jsonwebtoken.Jwts;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -19,7 +20,7 @@ public class TokenFilter extends GenericFilterBean {
 
         String header = req.getHeader("Authorization");
 
-        if(header == null || !header.startsWith("Token: ")) { /*estou usando a sintaxe "Token: " no lugar de  "Bearer"*/
+        if (header == null || !header.startsWith("Bearer ")) {
             throw new ServletException("Token inexistente ou mal formatado!");
         }
 

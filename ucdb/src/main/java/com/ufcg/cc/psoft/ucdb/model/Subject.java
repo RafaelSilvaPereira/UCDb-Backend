@@ -4,10 +4,7 @@ import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @Entity(name = "Subject")
@@ -21,29 +18,21 @@ public class Subject {
     private String name;
 
     @ManyToMany(mappedBy = "enjoiyed")
-    private Set<User> userLiked;
+    private Set<Student> studentLiked;
 
     @ManyToMany(mappedBy = "disliked")
-    private Set<User> userDisliked;
-
-    @OneToMany(
-            mappedBy = "subject",
-            cascade =  CascadeType.ALL,
-            orphanRemoval = true
-    )
-    private Set<UserEvalueSubject> userEvaluation;
+    private Set<Student> studentDisliked;
 
     @OneToMany(
             mappedBy = "subject",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private Set<Comment> subjectComments;
+    private List<Comment> subjectComments;
 
     public Subject() {
-        this.userLiked = new HashSet<>();
-        this.userDisliked = new HashSet<>();
-        this.userEvaluation = new HashSet<>();
+        this.studentLiked = new HashSet<>();
+        this.studentDisliked = new HashSet<>();
     }
 
     public Subject(String name) {
@@ -72,28 +61,20 @@ public class Subject {
         this.name = name;
     }
 
-    public Set<User> getUserLiked() {
-        return userLiked;
+    public Set<Student> getStudentLiked() {
+        return studentLiked;
     }
 
-    public void setUserLiked(Set<User> userLiked) {
-        this.userLiked = userLiked;
+    public void setStudentLiked(Set<Student> studentLiked) {
+        this.studentLiked = studentLiked;
     }
 
-    public Set<User> getUserDisliked() {
-        return userDisliked;
+    public Set<Student> getStudentDisliked() {
+        return studentDisliked;
     }
 
-    public void setUserDisliked(Set<User> userDisliked) {
-        this.userDisliked = userDisliked;
-    }
-
-    public Set<UserEvalueSubject> getUserEvaluation() {
-        return userEvaluation;
-    }
-
-    public void setUserEvaluation(Set<UserEvalueSubject> userEvaluation) {
-        this.userEvaluation = userEvaluation;
+    public void setStudentDisliked(Set<Student> studentDisliked) {
+        this.studentDisliked = studentDisliked;
     }
 
     @Override
@@ -112,16 +93,14 @@ public class Subject {
     public Subject superficialClone() {
         Subject subjectClone = new Subject();
         if (!this.isNIL()) {
-            Set<User> likes = cloneUserOption(this.getUserLiked());
-            Set<User> dislikes = cloneUserOption(this.getUserDisliked());
-            Set<UserEvalueSubject> evaluationClone = cloneUserEvaluation();
-            Set<Comment> commentsClone = cloneUserComments();
+            Set<Student> likes = cloneStudentOption(this.getStudentLiked());
+            Set<Student> dislikes = cloneStudentOption(this.getStudentDisliked());
+            List<Comment> commentsClone = cloneStudentComments();
 
             subjectClone.setId(this.getId());
             subjectClone.setName(this.getName());
-            subjectClone.setUserLiked(likes);
-            subjectClone.setUserDisliked(dislikes);
-            subjectClone.setUserEvaluation(evaluationClone);
+            subjectClone.setStudentLiked(likes);
+            subjectClone.setStudentDisliked(dislikes);
             subjectClone.setSubjectComments(commentsClone);
 
 
@@ -129,8 +108,8 @@ public class Subject {
         return subjectClone;
     }
 
-    private Set<Comment> cloneUserComments() {
-        Set<Comment> comments = new HashSet<>();
+    private List<Comment> cloneStudentComments() {
+        List<Comment> comments = new ArrayList<>();
         if (!isANILCOllection(this.getSubjectComments())) {
             for (Comment comment : this.getSubjectComments()) {
                 if (comment != null && !comment.isNIL() && !comment.isSubComment() && comment.isVisble()) {
@@ -146,40 +125,26 @@ public class Subject {
     }
 
     @NotNull
-    private Set<User> cloneUserOption(Set<User> local) {
-        Set<User> userOption = new HashSet<>();
+    private Set<Student> cloneStudentOption(Set<Student> local) {
+        Set<Student> studentOption = new HashSet<>();
         if (!isANILCOllection(local)) {
-            for (User user : local) {
-                if (user != null && !user.isNIL()) {
-                    userOption.add(user.superficialCopy());
+            for (Student student : local) {
+                if (student != null && !student.isNIL()) {
+                    studentOption.add(student.superficialCopy());
                 }
             }
         }
-        return userOption;
+        return studentOption;
     }
 
-
-    @NotNull
-    private Set<UserEvalueSubject> cloneUserEvaluation() {
-        Set<UserEvalueSubject> evalueSubjects = new HashSet<>();
-
-        if (!isANILCOllection(this.getUserEvaluation())) {
-            for (UserEvalueSubject userEvalueSubject : this.getUserEvaluation()) {
-                if (userEvalueSubject != null && !userEvalueSubject.isNIL()) {
-                    evalueSubjects.add(userEvalueSubject.superficialCopy());
-                }
-            }
-        }
-        return evalueSubjects;
-    }
 
     @Override
     public String toString() {
         String toString;
         if (!this.isNIL()) {
             toString = String.format("{\nid = {%s}, \nname = {%s}, \nlikes = {%s}, \ndislikes = {%s}, \ncomments = {%s}, " +
-                            "\nevaluation = {%s}}", this.getId(), this.getName(), this.getUserLiked().size(),
-                    this.getUserDisliked().size(), this.getSubjectComments().size(), this.getUserEvaluation().size());
+                            "\nevaluation = {%s}}", this.getId(), this.getName(), this.getStudentLiked().size(),
+                    this.getStudentDisliked().size(), this.getSubjectComments().size());
         } else {
             toString = "NIL";
         }

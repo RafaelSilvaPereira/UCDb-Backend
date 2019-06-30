@@ -1,14 +1,16 @@
 package com.ufcg.cc.psoft.ucdb.service;
 
 
-import com.ufcg.cc.psoft.ucdb.dao.CommentDAO;
+import com.ufcg.cc.psoft.ucdb.dao.StudentDAO;
 import com.ufcg.cc.psoft.ucdb.dao.SubjectDAO;
-import com.ufcg.cc.psoft.ucdb.dao.UserDAO;
-import com.ufcg.cc.psoft.ucdb.dao.UserEvalueSubjectDAO;
+import com.ufcg.cc.psoft.ucdb.model.Comment;
+import com.ufcg.cc.psoft.ucdb.model.Student;
 import com.ufcg.cc.psoft.ucdb.model.Subject;
-import com.ufcg.cc.psoft.ucdb.model.User;
+import com.ufcg.cc.psoft.ucdb.view.CommentView;
+import com.ufcg.cc.psoft.ucdb.view.GenericSubjectProfile;
 import com.ufcg.cc.psoft.ucdb.view.SubjectProfile;
 import com.ufcg.cc.psoft.util.Util;
+import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -18,8 +20,11 @@ import org.springframework.stereotype.Service;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Service
@@ -28,16 +33,13 @@ public class SubjectService {
     private final SubjectDAO subjectDAO;
 
     @Autowired
-    private final UserDAO userDAO;
-
-    private final UserEvalueSubjectDAO userEvalueSubjectDAO;
+    private final StudentDAO studentDAO;
 
     private final Util util;
 
-    public SubjectService(SubjectDAO subjectDAO, UserDAO userDAO, UserEvalueSubjectDAO userEvalueSubjectDAO, CommentDAO commentDAO ) {
+    public SubjectService(SubjectDAO subjectDAO, StudentDAO studentDAO) {
         this.subjectDAO = subjectDAO;
-        this.userDAO = userDAO;
-        this.userEvalueSubjectDAO = userEvalueSubjectDAO;
+        this.studentDAO = studentDAO;
         this.util = new Util();
     }
 
@@ -45,27 +47,81 @@ public class SubjectService {
 
     public void delete(long id) { subjectDAO.delete(id);}
 
-    public SubjectProfile findById(long id) {
+    public GenericSubjectProfile findById(long id) {
         Subject superficialClone = subjectDAO.findById(id).superficialClone();
-        return new SubjectProfile(superficialClone);
+        return getSubjectProfile(superficialClone);
     }
 
-    public List findAll() {
-        final List<Subject> subjectDAOAll = subjectDAO.findAll();
-        return subjectDAOAll.stream().map(subject -> new SubjectProfile(subject.superficialClone())).collect(Collectors.toList());
+    public List<GenericSubjectProfile> findAll(String sorterStrategy) {
+        List<Subject> subjectDAOAll = subjectDAO.findAll();
+        List<@NotNull SubjectProfile> collect = new ArrayList<>();
+        for (Subject subject : subjectDAOAll) {
+            SubjectProfile subjectProfile = getSubjectProfile(subject.superficialClone());
+            collect.add(subjectProfile);
+        }
+        return getAllSubjectProfile(sorterStrategy, collect);
+
     }
 
-    public List<SubjectProfile> findBySubstring(String substring) {
-        String auxSubstring = this.util.reconvertValidUrlToOriginalString(substring);
-        List<Subject> subjectDAOSubstring = subjectDAO.findBySubstring(auxSubstring);
-        List<SubjectProfile> subjectProfiles = subjectDAOSubstring.stream().map(subject -> new SubjectProfile(subject.superficialClone())).collect(Collectors.toList());
-        return subjectProfiles;
+    private List<GenericSubjectProfile> getAllSubjectProfile(String sorterStrategy, List<SubjectProfile> collect) {
+        List answer = null;
+        List<SubjectProfile> list;
+        switch (sorterStrategy) {
+            case "likes":
+                list = sortByLikes(collect);
+                break;
+            case "dislikes":
+                list = sortByDislikes(collect);
+                break;
+            case "comments":
+                list = sorterByComments(collect);
+                break;
+            case "proportion":
+                list = sortByProportion(collect);
+                break;
+            default:
+                list = collect;
+        }
+        answer = list.stream().map(this::modifyRepresentation).collect(Collectors.toList());
+        return answer;
+    }
+
+    private GenericSubjectProfile modifyRepresentation(SubjectProfile subjectProfile) {
+        return subjectProfile.toGenericRepresentation();
+    }
+
+    private List sortByProportion(List<SubjectProfile> list) {
+
+        Stream<@NotNull SubjectProfile> sorted = list.stream().sorted(((SubjectProfile o1, SubjectProfile o2) -> (int) (o2.getProportion() - o1.getProportion())));
+        List<@NotNull SubjectProfile> profiles = sorted.collect(Collectors.toList());
+        return profiles;
+    }
+
+    private List sorterByComments(List<SubjectProfile> collect) {
+        return collect.stream().sorted(((o1, o2) -> o2.getComments().size() - o1.getComments().size())).collect(Collectors.toList());
+    }
+
+    private List sortByDislikes(List<SubjectProfile> collect) {
+        return collect.stream().sorted(((o1, o2) -> o2.getDislikes() - o1.getDislikes())).collect(Collectors.toList());
+    }
+
+    private List sortByLikes(List<SubjectProfile> collect) {
+        return collect.stream().sorted(((o1, o2) -> o2.getLikes() - o1.getLikes())).collect(Collectors.toList());
+    }
+
+    public List findBySubstring(String substring) {
+
+        List<Subject> subjectDAOSubstring = subjectDAO.
+                findBySubstring(this.util.reconvertValidUrlToOriginalString(substring));
+        final Stream<Subject> stream = subjectDAOSubstring.stream();
+        return stream.map(this::getGenericSubjectProfile)
+                .collect(Collectors.toList());
     }
 
     public void saveAllSubjects() throws IOException, ParseException {
         JSONArray jsonArray;
         JSONParser jsonParser = new JSONParser();
-        FileReader archive = new FileReader("src/main/java/com/ufcg/cc/psoft/Util/disciplina.json");
+        FileReader archive = new FileReader("src/main/java/com/ufcg/cc/psoft/util/disciplina.json");
         jsonArray = (JSONArray) jsonParser.parse(archive);
         jsonArray.stream().forEach(object -> {
             JSONObject jsonobjectvalue = (JSONObject) object;
@@ -76,77 +132,66 @@ public class SubjectService {
 
     public void deleteAll() { subjectDAO.deleteAll();}
 
-    public void like(JSONObject request) {
-        User user = getUser(request, "user");
-        Subject subject = getSubject(request, "subject");
-        User user1 = null;
-        if (user != null && !user.isNIL()) {
-            user1 = new User(user.getEmail(), user.getFirstName(), user.getSecondName(), user.getPassword());
-        }
+    public void like(String token, long id) {
+        Student student = this.util.getStudent(token, studentDAO);
+        Subject subject = this.subjectDAO.findById(id);
 
-        subject.getUserLiked().add(user1);
-        Subject subject1 = null;
-        if (subject != null && !subject.isNIL()) {
-            subject1 = new Subject(subject.getId(), subject.getName());
-        }
 
-        user.getEnjoiyed().add(subject1);
-        subject.getUserLiked().add(user1);
-        undislike(user, subject);
-
-        updateDataBase(user, subject);
+        student.getEnjoiyed().add(subject);
+        subject.getStudentLiked().add(student);
+        undislike(student, subject);
+        updateDataBase(student, subject);
 
     }
 
-    public void unlike(JSONObject request) {
-        User user = this.util.getUser(request, "user", userDAO);
-        Subject subject = this.util.getSubject(request, "subject", subjectDAO);
+    public void dislike(String token, long id) {
+        Student student = this.util.getStudent(token, studentDAO);
+        Subject subject = this.subjectDAO.findById(id);
 
-        unlike(user, subject);
 
-        updateDataBase(user, subject);
-    }
+        subject.getStudentDisliked().add(student);
+        student.getDisliked().add(subject);
 
-    public void dislike(JSONObject request) {
-        User user = this.util.getUser(request, "user", userDAO);
-        Subject subject = this.util.getSubject(request, "subject", subjectDAO);
+        unlike(student, subject);
 
-        subject.getUserDisliked().add(user);
-        user.getDisliked().add(subject);
-
-        unlike(user, subject);
-
-        updateDataBase(user, subject);
+        updateDataBase(student, subject);
 
     }
 
-    public void undislike(JSONObject request) {
-        User user = this.util.getUser(request, "user", userDAO);
-        Subject subject = this.util.getSubject(request, "subject", subjectDAO);
+    public void unlike(String token, long id) {
+        Student student = this.util.getStudent(token, studentDAO);
+        Subject subject = this.subjectDAO.findById(id);
 
-        undislike(user, subject);
-        updateDataBase(user, subject);
+        unlike(student, subject);
+
+        updateDataBase(student, subject);
     }
 
-    private void undislike(User user, Subject subject) {
-        subject.getUserDisliked().remove(user);
-        user.getDisliked().remove(subject);
+
+
+    public void undislike(String token, long id) {
+        Student student = this.util.getStudent(token, studentDAO);
+        Subject subject = this.subjectDAO.findById(id);
+
+        undislike(student, subject);
+        updateDataBase(student, subject);
     }
 
-    private void unlike(User user, Subject subject) {
-        subject.getUserLiked().remove(user);
-        user.getEnjoiyed().remove(subject);
+    private void undislike(Student student, Subject subject) {
+        subject.getStudentDisliked().remove(student);
+        student.getDisliked().remove(subject);
     }
 
-    private void updateDataBase(User user, Subject subject) {
-        userDAO.save(user); // update user
+    private void unlike(Student student, Subject subject) {
+        subject.getStudentLiked().remove(student);
+        student.getEnjoiyed().remove(subject);
+    }
+
+    private void updateDataBase(Student student, Subject subject) {
+        studentDAO.save(student); // update student
         subjectDAO.save(subject);
     }
 
-    private User getUser(JSONObject request, String value) {
-        String userEmail = (String) request.get(value);
-        return userDAO.userFindByEmail(userEmail);
-    }
 
     private Subject getSubject(JSONObject request, String value) {
         String subjectId = (String) request.get(value);
@@ -154,5 +199,37 @@ public class SubjectService {
         return subjectDAO.findById(id);
     }
 
+    @NotNull
+    private SubjectProfile getSubjectProfile(Subject superficialClone) {
+        final long cloneId = superficialClone.getId();
+        final String cloneName = superficialClone.getName();
+        final int cloneDislikes = superficialClone.getStudentLiked().size();
+        final int cloneLikes = superficialClone.getStudentDisliked().size();
+
+        final List<Comment> subjectComments = superficialClone.getSubjectComments();
+        return new SubjectProfile(cloneId, cloneName, cloneLikes, cloneDislikes,
+                setViewComments(subjectComments));
+    }
+
+    private GenericSubjectProfile getGenericSubjectProfile(Subject superficialClone) {
+        final long cloneId = superficialClone.getId();
+        final String cloneName = superficialClone.getName();
+        return new GenericSubjectProfile(cloneId, cloneName);
+    }
+
+    private Collection<CommentView> setViewComments(Collection<Comment> subjectComments) {
+        List<CommentView> list = new ArrayList<>();
+        for (Comment c : subjectComments) {
+            CommentView commentView = new CommentView(c.getStudent().getFirstName(),
+                    c.getStudent().getSecondName(),
+                    c.getComment(),
+                    setViewComments(c.getSubcomments()),
+                    c.getId(),
+                    c.getDate()
+            );
+            list.add(commentView);
+        }
+        return list;
+    }
 
 }

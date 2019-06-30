@@ -3,21 +3,23 @@ package com.ufcg.cc.psoft.ucdb.model;
 import org.jetbrains.annotations.Nullable;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 @Entity
 @Table(name = "Comment")
 public class Comment {
 
-    @EmbeddedId
-    private SubjectUserID id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private long id;
 
     @Column(name = "subjectComment") /* definindo o texto*/
     private String comment;
+
+    @Column(name = "postDate")
+    private String date;
 
     @Column(name = "visible")
     private Boolean visible;
@@ -28,44 +30,36 @@ public class Comment {
     @OneToMany(mappedBy = "superComment") /*definindo o auto relacionamento*/
     private List<Comment> subcomments;
 
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Student student;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("user")
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("subject")
     private Subject subject;
 
     public Comment() {
-        this.id = new SubjectUserID();
         this.comment = "";
         this.superComment = null;
         this.subcomments = new ArrayList<>();
         this.visible = true;
+        final Date date = new Date();
+        String commentDate = new SimpleDateFormat("dd/MM/yyyy").format(date);
+        String commentHour = new SimpleDateFormat("HH:mm:ss").format(date);
+        this.date = String.format("at: %s on day: %s", commentHour, commentDate);
+
     }
 
-    public Comment(Subject subject, User user, String comment) {
+    public Comment(Subject subject, Student student, String comment) {
         this();
-        this.id = new SubjectUserID(subject.getId(), user.getEmail());
         this.subject = subject;
-        this.user = user;
+        this.student = student;
         this.comment = comment;
     }
 
-    public Comment(Subject subject, User user, String comment, Comment superComment) {
-        this(subject, user, comment);
+    public Comment(Subject subject, Student student, String comment, Comment superComment) {
+        this(subject, student, comment);
         this.superComment = superComment;
     }
 
-    public SubjectUserID getId() {
-        return id;
-    }
-
-    public void setId(SubjectUserID id) {
-        this.id = id;
-    }
 
     public Comment getSuperComment() {
         return superComment;
@@ -87,16 +81,25 @@ public class Comment {
         return comment;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+
     public void setComment(String comment) {
         this.comment = comment;
     }
 
-    public User getUser() {
-        return user;
+    public Student getStudent() {
+        return student;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setStudent(Student student) {
+        this.student = student;
     }
 
     public Subject getSubject() {
@@ -115,12 +118,24 @@ public class Comment {
         this.visible = visible;
     }
 
+    public Boolean getVisible() {
+        return visible;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Comment)) return false;
         Comment comment = (Comment) o;
-        return getId().equals(comment.getId());
+        return getId() == comment.getId();
     }
 
     @Override
@@ -134,7 +149,7 @@ public class Comment {
         if (!this.isNIL()) {
             toString = String.format("Comement: {\n id = {%s, %s}\n superComment = {%s} subComments = {%s}," +
                             " textComment = {%s}",
-                    this.getId().getSubjectID(), this.getId().getUserID(), this.getSuperComment().toString(),
+                    this.getId(),  this.getSuperComment().toString(),
                     Arrays.toString(this.getSubcomments().toArray()));
         } else {
             toString = "NIL";
@@ -143,8 +158,9 @@ public class Comment {
         return toString;
     }
 
+
     public boolean isNIL() {
-        return this.getId().isNIl();
+        return this.getId() == 0;
     }
 
     public Comment superficialCopy() {
@@ -152,8 +168,10 @@ public class Comment {
         if (this.visible && this.getSuperComment() == null) {
 
             Subject subjectClone = getSubjectClone();
-            User userCopy = getUserClone();
-            commentClone = new Comment(subjectClone, userCopy, this.getComment());
+            Student studentCopy = getStudentClone();
+            String dateCopy = this.getDate();
+            commentClone = new Comment(subjectClone, studentCopy, this.getComment());
+            commentClone.setDate(dateCopy);
             getSuperCommentClone(commentClone);
             commentClone.setSubcomments(this.subcommentsClone());
 
@@ -164,7 +182,7 @@ public class Comment {
 
     private void getSuperCommentClone(Comment commentClone) {
         if (this.getSuperComment() != null && !this.getSuperComment().isNIL()) {
-            Comment superCommentClone = new Comment(this.superComment.getSubject(), this.superComment.getUser(),
+            Comment superCommentClone = new Comment(this.superComment.getSubject(), this.superComment.getStudent(),
                     this.superComment.getComment());
             commentClone.setSuperComment(superCommentClone);
         } else
@@ -183,23 +201,25 @@ public class Comment {
     }
 
     @Nullable
-    private User getUserClone() {
-        User userCopy;
-        if (this.user != null && !this.user.isNIL()) {
-            userCopy = new User(this.getUser().getEmail(), this.getUser().getFirstName(),
-                    this.getUser().getSecondName(), this.getUser().getPassword());
+    private Student getStudentClone() {
+        Student studentCopy;
+        if (this.student != null && !this.student.isNIL()) {
+            studentCopy = new Student(this.getStudent().getEmail(), this.getStudent().getFirstName(),
+                    this.getStudent().getSecondName(), this.getStudent().getPassword());
         } else {
-            userCopy = null;
+            studentCopy = null;
         }
-        return userCopy;
+        return studentCopy;
     }
 
     private List<Comment> subcommentsClone() {
         List<Comment> subcomments = new ArrayList<>();
         for (Comment sc : this.getSubcomments()) {
             Subject subjectClone = new Subject(sc.getSubject().getId(), sc.getSubject().getName());
-            User userClone = sc.getUser().superficialCopy();
-            Comment subcommentClone = new Comment(subjectClone, userClone, sc.getComment());
+            Student studentClone = sc.getStudent().superficialCopy();
+            String dateCopy = sc.getDate();
+            Comment subcommentClone = new Comment(subjectClone, studentClone, sc.getComment());
+            subcommentClone.setDate(dateCopy);
             subcomments.add(subcommentClone);
         }
         return subcomments;

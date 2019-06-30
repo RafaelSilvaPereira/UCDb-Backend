@@ -2,11 +2,10 @@ package com.ufcg.cc.psoft.ucdb.service;
 
 import com.ufcg.cc.psoft.ucdb.dao.CommentDAO;
 import com.ufcg.cc.psoft.ucdb.dao.SubjectDAO;
-import com.ufcg.cc.psoft.ucdb.dao.UserDAO;
+import com.ufcg.cc.psoft.ucdb.dao.StudentDAO;
 import com.ufcg.cc.psoft.ucdb.model.Comment;
+import com.ufcg.cc.psoft.ucdb.model.Student;
 import com.ufcg.cc.psoft.ucdb.model.Subject;
-import com.ufcg.cc.psoft.ucdb.model.SubjectUserID;
-import com.ufcg.cc.psoft.ucdb.model.User;
 import com.ufcg.cc.psoft.util.Util;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,60 +18,66 @@ public class CommentService {
     private final CommentDAO commentDAO;
 
     @Autowired
-    private final UserDAO userDAO;
+    private final StudentDAO studentDAO;
 
     @Autowired
     private final SubjectDAO subjectDAO;
 
     private final Util util;
 
-    public CommentService(CommentDAO commentDAO, UserDAO userDAO, SubjectDAO subjectDAO) {
+    public CommentService(CommentDAO commentDAO, StudentDAO studentDAO, SubjectDAO subjectDAO) {
         this.commentDAO = commentDAO;
-        this.userDAO = userDAO;
+        this.studentDAO = studentDAO;
         this.subjectDAO = subjectDAO;
         this.util = new Util();
     }
 
-    public void commentSubject(JSONObject request) {
-        User user = this.util.getUser(request, "user", userDAO);
-        Subject subject = this.util.getSubject(request, "subject", subjectDAO);
+    public void commentSubject(String token, long id, JSONObject request) {
+        Student student = this.util.getStudent(token, studentDAO);
+        Subject subject = this.subjectDAO.findById(id);
         String comment = (String) request.get("comment");
 
-        if (user != null && subject != null && comment != null && !"".equals(comment.trim())) {
-            final Comment toSaveComment = new Comment(subject, user, comment);
+        if (student != null && subject != null && comment != null && !"".equals(comment.trim())) {
+            final Comment toSaveComment = new Comment(subject, student, comment);
             this.commentDAO.save(toSaveComment);
         }
     }
 
-    public void addSubcommentToSubject(JSONObject request) {
-        User superCommentUser = this.util.getUser(request, "superCommentUserEmail", userDAO).superficialCopy();
+    /* a gente apagou o clone */
+    public void addSubcommentToSubject(String studentToken, long commentId, long idSubject, JSONObject request) {
 
-        Subject superCommentSubject = this.util.getSubject(request, "superCommentSubjectID", subjectDAO).superficialClone();
 
-        User subCommentUser = this.util.getUser(request, "subCommentUserEmail", userDAO).superficialCopy();
+        Comment comment = this.commentDAO.findById(commentId);
+
+        Student superCommentStudent = this.commentDAO.findById(commentId).getStudent();
+        Subject superCommentSubject = this.subjectDAO.findById(idSubject);
+
         /* a subCommentSubject deve ser a mesma já que subcomment simula a resposta a um comentario */
-
         String txtComment = (String) request.get("comment");
+        Student subCommentStudent = this.util.getStudent(studentToken, studentDAO);
 
-        if (superCommentUser != null && superCommentSubject != null && subCommentUser != null
+
+        if (superCommentStudent != null && superCommentSubject != null && subCommentStudent != null
                 && txtComment != null && !"".equals(txtComment.trim())) {
-            SubjectUserID subjectUserID = new SubjectUserID(superCommentSubject.getId(), superCommentUser.getEmail());
 
-            Comment superComment = this.commentDAO.findByIdAlternative(subjectUserID);
 
-            Comment subComment = new Comment(superCommentSubject, subCommentUser, txtComment, superComment);
 
-            superComment.getSubcomments().add(subComment);
+
+
+            Comment subComment = new Comment(superCommentSubject, subCommentStudent, txtComment, comment);
+
+            comment.getSubcomments().add(subComment);
             this.commentDAO.save(subComment);
-            this.commentDAO.save(superComment);
+            this.commentDAO.save(comment);
         }
     }
 
-    public void deleteComment(String subjectId, String userEmail) {
-        Long subjectIdLong = Long.parseLong(subjectId);
-        final Comment comment = this.commentDAO.findByIdAlternative(new SubjectUserID(subjectIdLong, userEmail));
-        comment.setVisible(false);
-        this.commentDAO.save(comment);
+    public void deleteComment(String token, long id) {
+        Student student = this.util.getStudent(token, studentDAO);
+        final Comment comment = this.commentDAO.findById(id);
+        if (comment.getStudent().getEmail() == student.getEmail()) {
+            comment.setVisible(false);
+            this.commentDAO.save(comment);
+        }
     }
-
 }
