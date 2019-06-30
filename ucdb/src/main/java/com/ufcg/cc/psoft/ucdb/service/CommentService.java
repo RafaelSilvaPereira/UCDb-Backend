@@ -1,8 +1,8 @@
 package com.ufcg.cc.psoft.ucdb.service;
 
 import com.ufcg.cc.psoft.ucdb.dao.CommentDAO;
-import com.ufcg.cc.psoft.ucdb.dao.SubjectDAO;
 import com.ufcg.cc.psoft.ucdb.dao.StudentDAO;
+import com.ufcg.cc.psoft.ucdb.dao.SubjectDAO;
 import com.ufcg.cc.psoft.ucdb.model.Comment;
 import com.ufcg.cc.psoft.ucdb.model.Student;
 import com.ufcg.cc.psoft.ucdb.model.Subject;
@@ -10,6 +10,8 @@ import com.ufcg.cc.psoft.util.Util;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class CommentService {
@@ -79,5 +81,13 @@ public class CommentService {
             comment.setVisible(false);
             this.commentDAO.save(comment);
         }
+    }
+
+
+    public List<Comment> getComments(long id) {
+        Subject subject = this.subjectDAO.findById(id);
+        Subject view = subject.superficialClone();
+        List<Comment> comments = view.getSubjectComments();
+        return comments;
     }
 }
