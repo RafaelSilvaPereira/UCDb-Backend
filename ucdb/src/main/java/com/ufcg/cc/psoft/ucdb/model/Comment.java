@@ -11,6 +11,7 @@ import java.util.*;
 @Table(name = "Comment")
 public class Comment {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
@@ -20,6 +21,8 @@ public class Comment {
 
     @Column(name = "postDate")
     private String date;
+    @Column(name = "hourDate")
+    private String hour;
 
     @Column(name = "visible")
     private Boolean visible;
@@ -44,7 +47,8 @@ public class Comment {
         final Date date = new Date();
         String commentDate = new SimpleDateFormat("dd/MM/yyyy").format(date);
         String commentHour = new SimpleDateFormat("HH:mm:ss").format(date);
-        this.date = String.format("at: %s on day: %s", commentHour, commentDate);
+        this.date = commentDate;
+        this.hour = commentHour;
 
     }
 
@@ -130,6 +134,14 @@ public class Comment {
         this.date = date;
     }
 
+    public String getHour() {
+        return hour;
+    }
+
+    public void setHour(String hour) {
+        this.hour = hour;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -154,7 +166,6 @@ public class Comment {
         } else {
             toString = "NIL";
         }
-
         return toString;
     }
 
@@ -170,9 +181,10 @@ public class Comment {
             Subject subjectClone = getSubjectClone();
             Student studentCopy = getStudentClone();
             String dateCopy = this.getDate();
-
+            String hourCopy = this.getHour();
             commentClone = new Comment(subjectClone, studentCopy, this.getComment());
             commentClone.setDate(dateCopy);
+            commentClone.setHour(hourCopy);
             commentClone.setId(this.getId());
             getSuperCommentClone(commentClone);
             commentClone.setSubcomments(this.subcommentsClone());
@@ -220,8 +232,11 @@ public class Comment {
             Subject subjectClone = new Subject(sc.getSubject().getId(), sc.getSubject().getName());
             Student studentClone = sc.getStudent().superficialCopy();
             String dateCopy = sc.getDate();
+            String hourCopy = sc.getHour();
             Comment subcommentClone = new Comment(subjectClone, studentClone, sc.getComment());
             subcommentClone.setDate(dateCopy);
+            subcommentClone.setHour(hourCopy);
+
             subcommentClone.setId(this.getId());
             subcomments.add(subcommentClone);
         }

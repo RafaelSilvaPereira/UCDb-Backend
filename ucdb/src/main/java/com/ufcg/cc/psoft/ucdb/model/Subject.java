@@ -96,7 +96,6 @@ public class Subject {
             Set<Student> likes = cloneStudentOption(this.getStudentLiked());
             Set<Student> dislikes = cloneStudentOption(this.getStudentDisliked());
             List<Comment> commentsClone = cloneStudentComments();
-
             subjectClone.setId(this.getId());
             subjectClone.setName(this.getName());
             subjectClone.setStudentLiked(likes);
@@ -121,7 +120,7 @@ public class Subject {
     }
 
     private boolean isANILCOllection(Collection collection) {
-        return collection.isEmpty() || collection == null;
+        return Objects.requireNonNull(collection).isEmpty();
     }
 
     @NotNull

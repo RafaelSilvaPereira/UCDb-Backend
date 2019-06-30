@@ -227,7 +227,8 @@ public class SubjectService {
                     c.getComment(),
                     setViewComments(c.getSubcomments()),
                     c.getId(),
-                    c.getDate()
+                    c.getDate(),
+                    c.getHour()
             );
             list.add(commentView);
         }

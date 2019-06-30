@@ -13,15 +13,17 @@ public class CommentView {
     private Collection<CommentView> subcomments; /*CommentView vai gerar uma lista de comentarios que são comments view*/
     private long commentID;
     private String commentDate;
+    private String commentHour;
 
     public CommentView(String studentName, String studentSecondName, String comment, Collection<CommentView> subcomments
-            , long commentID, String commentDate) {
+            , long commentID, String commentDate, String commentHour) {
         this.studentName = studentName;
         this.studentSecondName = studentSecondName;
         this.comment = comment;
         this.subcomments = subcomments;
         this.commentID = commentID;
         this.commentDate = commentDate;
+        this.commentHour = commentHour;
     }
 
     public void setSubcomments(Collection<CommentView> subcomments) {
@@ -74,6 +76,15 @@ public class CommentView {
 
     public void setCommentDate(String commentDate) {
         this.commentDate = commentDate;
+    }
+
+
+    public String getCommentHour() {
+        return commentHour;
+    }
+
+    public void setCommentHour(String commentHour) {
+        this.commentHour = commentHour;
     }
 
     @Override
