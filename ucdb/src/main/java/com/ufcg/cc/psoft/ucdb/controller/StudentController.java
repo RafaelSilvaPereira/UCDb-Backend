@@ -31,14 +31,14 @@ public class StudentController {
     }
 
     /* essa utl privada poderia ser qualquer outra "/carambolas" */
-    @PostMapping(value = "/enjoyed/{id}")
+    @GetMapping(value = "/enjoyed/{id}")
     @ResponseBody
     public ResponseEntity<Boolean> enjoyeds(@RequestHeader ("Authorization") String token, @PathVariable long id) {
         final Boolean enjoyed = this.studentService.enjoyed(token.substring(7), id);
         return new ResponseEntity<>(enjoyed, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/disliked/{id}")
+    @GetMapping(value = "/disliked/{id}")
     @ResponseBody
     public ResponseEntity<Boolean> dislikeds(@RequestHeader ("Authorization") String token, @PathVariable long id) {
         final Boolean enjoyed = this.studentService.disliked(token.substring(7), id);

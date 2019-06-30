@@ -7,7 +7,7 @@ public class main {
     public static void main(String[] args) {
         String url = new Scanner(System.in).nextLine();
 
-        System.out.println();
+        System.out.println(Math.round(-1.5));
         //        HashSet<Integer> a = new HashSet<>();
 //        a.add(1); a.add(2); a.add(3);
 //        System.out.println(a);

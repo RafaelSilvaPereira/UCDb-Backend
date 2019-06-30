@@ -92,7 +92,8 @@ public class SubjectService {
 
     private List sortByProportion(List<SubjectProfile> list) {
 
-        Stream<@NotNull SubjectProfile> sorted = list.stream().sorted(((SubjectProfile o1, SubjectProfile o2) -> (int) (o2.getProportion() - o1.getProportion())));
+        Stream<@NotNull SubjectProfile> sorted = list.stream()
+                .sorted(((SubjectProfile o1, SubjectProfile o2) -> (int) Math.round(o2.getProportion() - o1.getProportion())));
         List<@NotNull SubjectProfile> profiles = sorted.collect(Collectors.toList());
         return profiles;
     }
@@ -122,6 +123,7 @@ public class SubjectService {
         JSONArray jsonArray;
         JSONParser jsonParser = new JSONParser();
         FileReader archive = new FileReader("src/main/java/com/ufcg/cc/psoft/util/disciplina.json");
+
         jsonArray = (JSONArray) jsonParser.parse(archive);
         jsonArray.stream().forEach(object -> {
             JSONObject jsonobjectvalue = (JSONObject) object;

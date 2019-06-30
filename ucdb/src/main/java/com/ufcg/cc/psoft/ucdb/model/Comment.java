@@ -170,11 +170,12 @@ public class Comment {
             Subject subjectClone = getSubjectClone();
             Student studentCopy = getStudentClone();
             String dateCopy = this.getDate();
+
             commentClone = new Comment(subjectClone, studentCopy, this.getComment());
             commentClone.setDate(dateCopy);
+            commentClone.setId(this.getId());
             getSuperCommentClone(commentClone);
             commentClone.setSubcomments(this.subcommentsClone());
-
         }
 
         return commentClone;
@@ -184,6 +185,7 @@ public class Comment {
         if (this.getSuperComment() != null && !this.getSuperComment().isNIL()) {
             Comment superCommentClone = new Comment(this.superComment.getSubject(), this.superComment.getStudent(),
                     this.superComment.getComment());
+
             commentClone.setSuperComment(superCommentClone);
         } else
             commentClone.setSuperComment(null);
@@ -220,6 +222,7 @@ public class Comment {
             String dateCopy = sc.getDate();
             Comment subcommentClone = new Comment(subjectClone, studentClone, sc.getComment());
             subcommentClone.setDate(dateCopy);
+            subcommentClone.setId(this.getId());
             subcomments.add(subcommentClone);
         }
         return subcomments;
