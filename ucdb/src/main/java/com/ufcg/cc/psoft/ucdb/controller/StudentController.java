@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.ws.Response;
+
 @RestController
 @RequestMapping({"v1/students"})
 public class StudentController {
@@ -43,5 +45,11 @@ public class StudentController {
     public ResponseEntity<Boolean> dislikeds(@RequestHeader ("Authorization") String token, @PathVariable long id) {
         final Boolean enjoyed = this.studentService.disliked(token.substring(7), id);
         return new ResponseEntity<>(enjoyed, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/find")
+    public ResponseEntity<StudentView> find(@RequestHeader ("Authorization") String token) {
+        StudentView student = this.studentService.findStundent(token.substring(7));
+        return new ResponseEntity<>(student, HttpStatus.OK);
     }
 }

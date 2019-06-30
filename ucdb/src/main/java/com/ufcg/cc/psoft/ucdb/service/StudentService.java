@@ -72,4 +72,9 @@ public class StudentService {
     }
     // TODO: Um dos findById não está funcionando corretamente  DAI EU TIVE QUE COMENTAR PARA TESTAR O RESTO
 
+    public StudentView findStundent(String token) {
+        Student find = this.util.getStudent(token, this.studentDAO);
+        StudentView student = new StudentView(find.getEmail(),find.getFirstName(),find.getSecondName());
+        return student;
+    }
  }
