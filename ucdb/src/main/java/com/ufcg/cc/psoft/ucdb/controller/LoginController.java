@@ -4,6 +4,8 @@ import com.ufcg.cc.psoft.exceptions.InvalidLoginException;
 import com.ufcg.cc.psoft.exceptions.NotCorrespondingStudentLogin;
 import com.ufcg.cc.psoft.ucdb.model.Student;
 import com.ufcg.cc.psoft.ucdb.service.LoginService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
  * LoginController: LoginController, this class is responsible for managing a system of user authentication
  * on the system.
  */
+@Api(value = "Controller do Login")
 @RestController
 @RequestMapping("v1/login")
 public class LoginController {
@@ -31,6 +34,7 @@ public class LoginController {
      * @throws InvalidLoginException : if one of the parameters (email or password) is passed with an invalid value
      *  (null, or invalid string).
      */
+    @ApiOperation(value = "Realiza o login do usuario, passado por JSON: email e password")
     @PostMapping("/")
     @ResponseBody
     public @NotNull ResponseEntity<LoginService.LoginResponse> authenticate(@RequestBody Student requestStudent) throws NotCorrespondingStudentLogin,
