@@ -3,7 +3,7 @@ Classificações e reviews de cursos da UFCG.
 Objetivo: organizar plataforma colaborativa para avaliações e informações sobre disciplinas de cursos da UFCG.
 
 # Grupo:
-Áthila Matheus Barros Borges | 118210206
+Áthila Matheus Barros Borges | 118210206\n
 Marcelo Fagner da Silva Andrade | 117110910
 Rafael da Silva Pereira | 117110921
 
