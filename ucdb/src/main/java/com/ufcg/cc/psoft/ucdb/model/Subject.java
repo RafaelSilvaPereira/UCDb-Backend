@@ -12,11 +12,9 @@ import java.util.*;
 public class Subject {
 
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @NotNull
     private String name;
 
     @ManyToMany(mappedBy = "enjoiyed")

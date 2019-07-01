@@ -1,7 +1,6 @@
 package com.ufcg.cc.psoft.ucdb.model;
 
 import lombok.Data;
-import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -13,15 +12,10 @@ import java.util.Set;
 @Table(name = "student")
 public class Student {
 
-
     @Id
-    @NotNull
     private String email;
-    @NotNull
     private String firstName;
-    @NotNull
     private String secondName;
-    @NotNull
     private String password;
 
     @ManyToMany

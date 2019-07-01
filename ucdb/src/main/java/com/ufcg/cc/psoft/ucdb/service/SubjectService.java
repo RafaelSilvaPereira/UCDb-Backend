@@ -1,7 +1,6 @@
 package com.ufcg.cc.psoft.ucdb.service;
 
 
-import com.ufcg.cc.psoft.exceptions.InvalidSubjectIDException;
 import com.ufcg.cc.psoft.ucdb.dao.StudentDAO;
 import com.ufcg.cc.psoft.ucdb.dao.SubjectDAO;
 import com.ufcg.cc.psoft.ucdb.model.Comment;
@@ -129,10 +128,7 @@ public class SubjectService {
         jsonArray.stream().forEach(object -> {
             JSONObject jsonobjectvalue = (JSONObject) object;
             String name = (String) jsonobjectvalue.get("nome");
-            if (this.util.getSubject(name,this.subjectDAO) == null) {
-                this.create(new Subject(name));
-            }
-
+            this.create(new Subject(name));
         });
     }
 
@@ -141,10 +137,6 @@ public class SubjectService {
     public void like(String token, long id) {
         Student student = this.util.getStudent(token, studentDAO);
         Subject subject = this.subjectDAO.findById(id);
-
-        if (subject == null) {
-            throw new InvalidSubjectIDException("Erro ao deixar like em disciplina: ID invalido.");
-        }
 
 
         student.getEnjoiyed().add(subject);
@@ -158,9 +150,6 @@ public class SubjectService {
         Student student = this.util.getStudent(token, studentDAO);
         Subject subject = this.subjectDAO.findById(id);
 
-        if (subject == null) {
-            throw new InvalidSubjectIDException("Erro ao deixar dislike em disciplina: ID invalido.");
-        }
 
         subject.getStudentDisliked().add(student);
         student.getDisliked().add(subject);
@@ -175,10 +164,6 @@ public class SubjectService {
         Student student = this.util.getStudent(token, studentDAO);
         Subject subject = this.subjectDAO.findById(id);
 
-        if (subject == null) {
-            throw new InvalidSubjectIDException("Erro ao remover like de disciplina: ID invalido.");
-        }
-
         unlike(student, subject);
 
         updateDataBase(student, subject);
@@ -189,10 +174,6 @@ public class SubjectService {
     public void undislike(String token, long id) {
         Student student = this.util.getStudent(token, studentDAO);
         Subject subject = this.subjectDAO.findById(id);
-
-        if (subject == null) {
-            throw new InvalidSubjectIDException("Erro ao remover dislike de disciplina: ID invalido.");
-        }
 
         undislike(student, subject);
         updateDataBase(student, subject);

@@ -1,6 +1,5 @@
 package com.ufcg.cc.psoft.ucdb.model;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.persistence.*;
@@ -13,23 +12,18 @@ import java.util.*;
 public class Comment {
 
 
-    @NotNull
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
 
-    @NotNull
     @Column(name = "subjectComment") /* definindo o texto*/
     private String comment;
 
-    @NotNull
     @Column(name = "postDate")
     private String date;
-    @NotNull
     @Column(name = "hourDate")
     private String hour;
 
-    @NotNull
     @Column(name = "visible")
     private Boolean visible;
 
