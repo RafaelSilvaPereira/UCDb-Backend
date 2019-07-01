@@ -46,7 +46,7 @@ public class CommentService {
             final Comment toSaveComment = new Comment(subject, student, comment);
             this.commentDAO.save(toSaveComment);
             response = new CommentView(student.getFirstName(), student.getSecondName(), comment, new ArrayList<>(),
-                    toSaveComment.getId(), toSaveComment.getDate(), toSaveComment.getHour());
+                    toSaveComment.getId(), toSaveComment.getDate(), toSaveComment.getHour(), toSaveComment.getVisible());
         }
         return response;
     }
@@ -74,7 +74,7 @@ public class CommentService {
             this.commentDAO.save(comment);
 
             response = new CommentView(subCommentStudent.getFirstName(), subCommentStudent.getSecondName(), txtComment, new ArrayList<>(),
-                    subComment.getId(), subComment.getDate(), subComment.getHour());
+                    subComment.getId(), subComment.getDate(), subComment.getHour(), subComment.getVisible());
         }
 
         return response;

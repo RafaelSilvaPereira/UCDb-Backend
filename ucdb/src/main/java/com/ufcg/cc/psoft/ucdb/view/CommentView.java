@@ -14,9 +14,10 @@ public class CommentView {
     private long commentID;
     private String commentDate;
     private String commentHour;
+    private boolean visible;
 
     public CommentView(String studentName, String studentSecondName, String comment, Collection<CommentView> subcomments
-            , long commentID, String commentDate, String commentHour) {
+            , long commentID, String commentDate, String commentHour, boolean visible) {
         this.studentName = studentName;
         this.studentSecondName = studentSecondName;
         this.comment = comment;
@@ -24,6 +25,7 @@ public class CommentView {
         this.commentID = commentID;
         this.commentDate = commentDate;
         this.commentHour = commentHour;
+        this.visible = visible;
     }
 
     public void setSubcomments(Collection<CommentView> subcomments) {
@@ -85,6 +87,14 @@ public class CommentView {
 
     public void setCommentHour(String commentHour) {
         this.commentHour = commentHour;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 
     @Override
