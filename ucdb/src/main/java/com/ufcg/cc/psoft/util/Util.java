@@ -32,6 +32,10 @@ public class Util {
         return subjectDAO.findById(id);
     }
 
+    public Subject getSubject(String name, SubjectDAO subjectDAO) {
+        return subjectDAO.findByName(name);
+    }
+
     public String reconvertValidUrlToOriginalString(String url) {
         try {
             return java.net.URLDecoder.decode(url, StandardCharsets.UTF_8.name());
