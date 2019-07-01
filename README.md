@@ -1,44 +1,21 @@
 # UCDb-Backend
-Classificações e reviews de cursos da UFCG.
-Objetivo: organizar plataforma colaborativa para avaliações e informações sobre disciplinas de cursos da UFCG.
+Projeto final da disciplina de Projeto de Software.
+* https://ucdb-aplicattion.herokuapp.com/
 
-# Grupo:
-Áthila Matheus Barros Borges | 118210206\n
-Marcelo Fagner da Silva Andrade | 117110910
-Rafael da Silva Pereira | 117110921
 
-# Documentação Swagger:
-https://ucdb-aplicattion.herokuapp.com/api/swagger-ui.html
+## Descrição:
+Classificações e reviews de cursos da UFCG. O objetivo é organizar uma plataforma colaborativa para avaliações e informações sobre disciplinas de cursos da UFCG. O usuário pode se registrar e realizar login. Deslogado, o usuário pode apenas procurar disciplinas por apartir de uma substring. Logado, o usuário pode obter o perfil de uma disciplina a partir do id. O usuário pode comentar, responder comentários, deixar like ou dislike na disciplina, tudo isso é exibido no perfil da disciplina. Além disso, o usuário também pode ranquear as disciplinas baseado em alguns critérios, como número de likes, dislikes, comentários, por proporção de likes e dislikes e odernação padrão, por id. 
 
-# Caso de uso 1:
-Cadastrar usuário:
-Rota = "/api/v1/students/"
-Body no formato = 
-"{
-	"email" : "email_do_usuario",
-	"firstName" : "primeiro_nome",
-	"secondName" : "segundo_nome",
-	"password" : "senha"
-}"
+## Especificação:
+Link para especificação do projeto [aqui](https://docs.google.com/document/d/e/2PACX-1vQg_32KOtk0Ok4EGrpZB_YlmWlRlOF-2fpuo7XfcncXnoSLKrlNy83Ymw-VffVN0BioqjAHnkS2TjJf/pub).
 
-Login de usuário:
-Rota = "/api/v1/login/"
-Body no formato =
-"{
-	"email" : "email_do_usuario",
-	"password" : "senha"
-}"
-Retorna o token do usuário.
+## Documentação Swagger:
+Link para a documentação Swagger da API [aqui](https://ucdb-aplicattion.herokuapp.com/api/swagger-ui.html).
 
-# Caso de uso 2:
+## Grupo:
+* Áthila Matheus Barros Borges | 118210206
+* Marcelo Fagner da Silva Andrade | 117110910
+* Rafael da Silva Pereira | 117110921
 
-# Caso de uso 3:
 
-# Caso de uso 4:
-
-# Caso de uso 5:
-
-# Caso de uso 6:
-
-# Caso de uso 7:
  
