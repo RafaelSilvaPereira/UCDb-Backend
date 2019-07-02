@@ -128,7 +128,9 @@ public class SubjectService {
         jsonArray.stream().forEach(object -> {
             JSONObject jsonobjectvalue = (JSONObject) object;
             String name = (String) jsonobjectvalue.get("nome");
-            this.create(new Subject(name));
+            if (this.subjectDAO.findByName(name) == null) {
+                this.create(new Subject(name));
+            }
         });
     }
 
