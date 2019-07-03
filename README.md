@@ -1,21 +1,17 @@
 # UCDb-Backend
 Projeto final da disciplina de Projeto de Software.
-* https://ucdb-aplicattion.herokuapp.com/
+* Aplica√ß√£o: http://kirk.lcc.ufcg.edu.br/~rafaelsp/
 
+## Descri√ß√£o:
+Classifica√ß√µes e reviews de cursos da UFCG. O objetivo √© organizar uma plataforma colaborativa para avalia√ß√µes e informa√ß√µes sobre disciplinas de cursos da UFCG. O usu√°rio pode se registrar e realizar login. Deslogado, o usu√°rio pode apenas procurar disciplinas por apartir de uma substring. Logado, o usu√°rio pode obter o perfil de uma disciplina a partir do id. O usu√°rio pode comentar, responder coment√°rios, deixar like ou dislike na disciplina, tudo isso √© exibido no perfil da disciplina. Al√©m disso, o usu√°rio tamb√©m pode ranquear as disciplinas baseado em alguns crit√©rios, como n√∫mero de likes, dislikes, coment√°rios, por propor√ß√£o de likes e dislikes e oderna√ß√£o padr√£o, por id. 
 
-## DescriÁ„o:
-ClassificaÁıes e reviews de cursos da UFCG. O objetivo È organizar uma plataforma colaborativa para avaliaÁıes e informaÁıes sobre disciplinas de cursos da UFCG. O usu·rio pode se registrar e realizar login. Deslogado, o usu·rio pode apenas procurar disciplinas por apartir de uma substring. Logado, o usu·rio pode obter o perfil de uma disciplina a partir do id. O usu·rio pode comentar, responder coment·rios, deixar like ou dislike na disciplina, tudo isso È exibido no perfil da disciplina. AlÈm disso, o usu·rio tambÈm pode ranquear as disciplinas baseado em alguns critÈrios, como n˙mero de likes, dislikes, coment·rios, por proporÁ„o de likes e dislikes e odernaÁ„o padr„o, por id. 
+## Especifica√ß√£o:
+Link para especifica√ß√£o do projeto [aqui](https://docs.google.com/document/d/e/2PACX-1vQg_32KOtk0Ok4EGrpZB_YlmWlRlOF-2fpuo7XfcncXnoSLKrlNy83Ymw-VffVN0BioqjAHnkS2TjJf/pub).
 
-## EspecificaÁ„o:
-Link para especificaÁ„o do projeto [aqui](https://docs.google.com/document/d/e/2PACX-1vQg_32KOtk0Ok4EGrpZB_YlmWlRlOF-2fpuo7XfcncXnoSLKrlNy83Ymw-VffVN0BioqjAHnkS2TjJf/pub).
-
-## DocumentaÁ„o Swagger:
-Link para a documentaÁ„o Swagger da API [aqui](https://ucdb-aplicattion.herokuapp.com/api/swagger-ui.html).
+## Documenta√ß√£o Swagger:
+Link para a documenta√ß√£o Swagger da API [aqui](https://ucdb-aplicattion.herokuapp.com/api/swagger-ui.html).
 
 ## Grupo:
-* ¡thila Matheus Barros Borges | 118210206
+* √Åthila Matheus Barros Borges | 118210206
 * Marcelo Fagner da Silva Andrade | 117110910
 * Rafael da Silva Pereira | 117110921
-
-
- 
