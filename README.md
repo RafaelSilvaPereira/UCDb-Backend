@@ -8,6 +8,9 @@ Classificações e reviews de cursos da UFCG. O objetivo é organizar uma plataf
 ## Especificação:
 Link para especificação do projeto [aqui](https://docs.google.com/document/d/e/2PACX-1vQg_32KOtk0Ok4EGrpZB_YlmWlRlOF-2fpuo7XfcncXnoSLKrlNy83Ymw-VffVN0BioqjAHnkS2TjJf/pub).
 
+# Demonstração:
+Link para o vídeo de demonstração da aplicação [aqui](https://www.youtube.com/watch?v=VhLkPkkrfNM).
+
 ## Documentação Swagger:
 Link para a documentação Swagger da API [aqui](https://ucdb-aplicattion.herokuapp.com/api/swagger-ui.html).
 
